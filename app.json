@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "CampusBuddy",
+    "slug": "CampusBuddy",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
