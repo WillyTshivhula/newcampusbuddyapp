@@ -5,6 +5,6 @@ import {
   } from "react-native";
 export default function ChatRoom() {
   return (
-    <Text>ChatRoom</Text>
+    <Text>ChatRoom tst</Text>
   )
 }
