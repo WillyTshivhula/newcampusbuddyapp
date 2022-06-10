@@ -21,5 +21,6 @@ export default function Tabs() {
     <Tab.Screen name="Chat" component={ChatRoom} />
     <Tab.Screen name="Market" component={MarketScreen} />
   </Tab.Navigator>
+  
   )
 }

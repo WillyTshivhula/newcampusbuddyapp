@@ -16,6 +16,8 @@ export default function SigninScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [err ,setErro] = useState(false)
+
   function nav(value) {
     navigation.navigate(value);
   }
@@ -24,6 +26,7 @@ export default function SigninScreen({ navigation }) {
       usernameOrEmail: username,
       password: password,
     };
+  
     axios
       .post("http://192.168.0.157:8080/api/auth/signin", data)
       .then((data) => {
@@ -46,6 +49,7 @@ export default function SigninScreen({ navigation }) {
             placeholderTextColor={"#fff"}
             onChangeText={(username) => setUsername(username)}
           />
+          { err ? <Text>Username is required</Text> : <Text></Text>}
           <TextInput
             style={styles.TextInput}
             placeholder={"Password"}
