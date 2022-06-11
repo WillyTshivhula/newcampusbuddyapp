@@ -29,7 +29,6 @@ export default function ForgotPassWordScreen({ navigation }) {
     nav('Tabs')
     console.log(data.data.body);
   })
-  
   .catch((err) => console.log(err));
   
 }

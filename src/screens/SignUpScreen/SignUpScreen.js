@@ -38,8 +38,6 @@ export default function SignUpScreen({ navigation }) {
       console.log(data.data.body);
       
     })
-    
-    
     .catch((err) => console.log(err));
     
  }
