@@ -7,9 +7,11 @@ import {
   useWindowDimensions,
   ScrollView,
   TextInput,
+  KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
 import Logo from "../../../assets/images/Logo_1.jpg";
+import axios from "axios";
 
 export default function SignUpScreen({ navigation }) {
   const [name, setname] = useState("");
@@ -26,12 +28,27 @@ export default function SignUpScreen({ navigation }) {
       email: email,
       password: password,
     };
-    console.log(data);
-  }
+
+    
+    axios
+    .post("http://10.0.0.7:8080/api/auth/signup", data)
+    
+    .then((data) => {
+      console.log(data.data.body);
+      
+    })
+    
+    
+    .catch((err) => console.log(err));
+    
+ }
+
   function nav() {
     navigation.navigate("SignIn");
   }
+  
   return (
+
     <View style={styles.mainView}>
       <View style={styles.topView}>
         {/* <Image source={Logo} style={{ width: 190, height: 80 }} /> */}

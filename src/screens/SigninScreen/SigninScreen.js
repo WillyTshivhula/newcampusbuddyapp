@@ -6,8 +6,11 @@ import {
   StyleSheet,
   useWindowDimensions,
   ScrollView,
+  KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import Logo from "../../../assets/images/Logo_1.jpg";
 import axios from "axios";
@@ -15,8 +18,6 @@ import axios from "axios";
 export default function SigninScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
-  const [err ,setErro] = useState(false)
 
   function nav(value) {
     navigation.navigate(value);
@@ -26,17 +27,26 @@ export default function SigninScreen({ navigation }) {
       usernameOrEmail: username,
       password: password,
     };
-  
+    
+
     axios
-      .post("http://192.168.0.157:8080/api/auth/signin", data)
+      .post("http://10.0.0.7:8080/api/auth/signin", data)
+      
       .then((data) => {
         nav('Tabs')
         console.log(data.data.body);
       })
+      
       .catch((err) => console.log(err));
+      
   }
+ 
+  
   return (
-    <View style={styles.mainView}>
+
+
+    
+  <View style={styles.mainView}>
       <View style={styles.topView}>
         <Image source={Logo} style={{ width: 190, height: 80 }} />
       </View>
@@ -49,7 +59,6 @@ export default function SigninScreen({ navigation }) {
             placeholderTextColor={"#fff"}
             onChangeText={(username) => setUsername(username)}
           />
-          { err ? <Text>Username is required</Text> : <Text></Text>}
           <TextInput
             style={styles.TextInput}
             placeholder={"Password"}
@@ -64,11 +73,15 @@ export default function SigninScreen({ navigation }) {
             <Text style={styles.buttonText}>Sign in</Text>
           </TouchableOpacity>
         </View>
+
         <TouchableOpacity style={styles.SignBtn} onPress={() => nav("SignUp")}>
+
           <Text style={styles.SignText}>Sign up</Text>
         </TouchableOpacity>
       </View>
     </View>
+   
+
   );
 }
 
@@ -82,14 +95,14 @@ const styles = StyleSheet.create({
   },
   topView: {
     width: "100%",
-    height: "30%",
+    flex: 1,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
   bottonView: {
     width: "100%",
-    height: "70%",
+    Height:Dimensions.get('window').height/2.5,
     backgroundColor: "#474749",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
@@ -106,7 +119,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 10,
   },
   TextInput: {
     width: "90%",
@@ -119,12 +132,12 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   button: {
-    width: "90%",
+width: "90%",
     color: "#000",
     height: 52,
     backgroundColor: "#fff",
     borderRadius: 10,
-    marginTop: 20,
+    marginTop: 60,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -140,13 +153,14 @@ const styles = StyleSheet.create({
     width: "100%",
     display: "flex",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 15,
+    marginBottom:50, 
   },
   forgot: {
     width: "100%",
     display: "flex",
     alignItems: "flex-end",
-    marginTop: 20,
+    marginTop: 10,
     marginRight: 34,
   },
 });
