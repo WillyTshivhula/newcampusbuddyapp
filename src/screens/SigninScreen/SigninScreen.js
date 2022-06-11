@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import {
+  SafeAreaView,
+  KeyboardAvoidingView,
   View,
   Text,
   Image,
@@ -25,7 +27,7 @@ export default function SigninScreen({ navigation }) {
       password: password,
     };
     axios
-      .post("http://192.168.0.157:8080/api/auth/signin", data)
+      .post("http://10.0.0.7:8080/api/auth/signin", data)
       .then((data) => {
         nav('Tabs')
         console.log(data.data.body);
@@ -33,7 +35,10 @@ export default function SigninScreen({ navigation }) {
       .catch((err) => console.log(err));
   }
   return (
-    <View style={styles.mainView}>
+    <KeyboardAvoidingView style={styles.mainView}>
+    
+
+    
       <View style={styles.topView}>
         <Image source={Logo} style={{ width: 190, height: 80 }} />
       </View>
@@ -64,7 +69,9 @@ export default function SigninScreen({ navigation }) {
           <Text style={styles.SignText}>Sign up</Text>
         </TouchableOpacity>
       </View>
-    </View>
+      
+    </KeyboardAvoidingView>
+    
   );
 }
 

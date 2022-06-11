@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Logo from "../../../assets/images/Logo_1.jpg";
+import axios from "axios";
 
 export default function ForgotPassWordScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -20,7 +21,13 @@ export default function ForgotPassWordScreen({ navigation }) {
       email: email,
       newPassword: newPassword,
     };
-    console.log(data);
+    axios
+      .put("http://10.0.0.7:8080/api/auth/signin", data)
+      .then((data) => {
+        nav('Tabs')
+        console.log(data.data.body);
+      })
+      .catch((err) => console.log(err));
   }
   function nav() {
     navigation.navigate("SignIn");
