@@ -34,6 +34,7 @@ export default function SignUpScreen({ navigation }) {
     .post("http://10.0.0.7:8080/api/auth/signup", data)
     
     .then((data) => {
+      nav('Tabs')
       console.log(data.data.body);
       
     })
