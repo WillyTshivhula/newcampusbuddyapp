@@ -8,13 +8,28 @@ import HomeScreen from './src/screens/SigninScreen/SigninScreen'
 import SignUpScreen from './src/screens/SignUpScreen/SignUpScreen'
 import ForgotPassWordScreen from './src/screens/ForgotPassWordScreen/ForgotPassWordScreen'
 import Tabs from './src/screens/Tabs/Tabs'
+import MarketScreen from './src/screens/MarketScreen/MarketScreen';
+import ProductInfo from './src/screens/MarketScreen/ProductInfo';
+import MyCart from './src/screens/MarketScreen/MyCart';
+import Listing from './src/screens/MarketScreen/Listing';
+import ManageListings from './src/screens/MarketScreen/ManageListings';
+//import Display from './Display';
+//import AddPostView from './AddPostView';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-    <Stack.Navigator initialRouteName="SignIn">
+    <Stack.Navigator initialRouteName="Home">
+      {/*<Stack.Screen name="Display" component={Display} options={{headerShown:false}}/>
+      <Stack.Screen name="AddPostView" component={AddPostView} options={{headerShown:false}}/>
+      */}
+      <Stack.Screen name="Home" component={MarketScreen} options={{headerShown:false}}/>
+      <Stack.Screen name="MyListings" component={ManageListings} options={{headerShown:false}}/>
+      <Stack.Screen name="MyCart" component={MyCart} options={{headerShown:false}}/>
+      <Stack.Screen name="Listing" component={Listing} options={{headerShown:false}}/>
+      <Stack.Screen name="ProductInfo" component={ProductInfo} options={{headerShown:false}}/>
       <Stack.Screen name="SignIn" component={HomeScreen} options={{headerShown:false}}/>
       <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown:false}}/>
       <Stack.Screen name="Forgot" component={ForgotPassWordScreen} options={{headerShown:false}}/>
