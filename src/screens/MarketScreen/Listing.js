@@ -13,8 +13,6 @@ import { COLOURS, Items } from "../../../components/database/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from "expo-image-picker";
-import mime from 'mime'
-import Task from "./Task";
 
 const Listing = ({navigation}) => {
   const [title, setTitle] = useState("");
