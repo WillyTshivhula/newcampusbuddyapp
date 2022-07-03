@@ -31,11 +31,12 @@ export default function SignUpScreen({ navigation }) {
 
     
     axios
-    .post("http://10.0.0.7:8080/api/auth/signup", data)
+    .post("http://10.0.0.3:8080/api/auth/signup", data)
     
     .then((data) => {
       nav('Tabs')
       console.log(data.data.body);
+      
       
     })
     .catch((err) => console.log(err));
@@ -47,7 +48,7 @@ export default function SignUpScreen({ navigation }) {
   }
   
   return (
-
+<ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.mainView}>
       <View style={styles.topView}>
         {/* <Image source={Logo} style={{ width: 190, height: 80 }} /> */}
@@ -58,45 +59,85 @@ export default function SignUpScreen({ navigation }) {
           <TextInput
             style={styles.TextInput}
             placeholder={"Full Name"}
-            placeholderTextColor={"#fff"}
+            placeholderTextColor={"black"}
             onChangeText={(name) => setname(name)}
           />
           <TextInput
             style={styles.TextInput}
             placeholder={"Username"}
-            placeholderTextColor={"#fff"}
+            placeholderTextColor={"black"}
             onChangeText={(username) => setUsername(username)}
           />
           <TextInput
             style={styles.TextInput}
             placeholder={"Course"}
-            placeholderTextColor={"#fff"}
+            placeholderTextColor={"black"}
             onChangeText={(course) => setCourse(course)}
           />
           <TextInput
             style={styles.TextInput}
             placeholder={"Email Address"}
-            placeholderTextColor={"#fff"}
+            placeholderTextColor={"black"}
             onChangeText={(email) => setEmail(email)}
           />
           <TextInput
             style={styles.TextInput}
             placeholder={"Password"}
-            placeholderTextColor={"#fff"}
+            placeholderTextColor={"black"}
             secureTextEntry={true}
             onChangeText={(password) => setPassword(password)}
           />
-          <TouchableOpacity style={styles.button} onPress={signUp}>
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableOpacity>
+
+            <Text style={styles.text}>
+             By Login in to Campus Buddy App, you confirm that you accept our 
+            <Text style={styles.link} onPress={async () => {
+          await WebBrowser.openAuthSessionAsync('https://www.example.com', 'https://www.google.com');
+         }}>Terms of Use</Text> and
+            <Text style={styles.link} onPress={async () => {
+          await WebBrowser.openAuthSessionAsync('https://www.example.com', 'https://www.google.com');
+         }}> Privacy Policy </Text> </Text>
+
+
+
+          <TouchableOpacity onPress={signUp} style={{ width: "75%",justifyContent:'center',
+	            alignItems:'center',marginHorizontal:50,marginVertical:28,
+              height:45,borderWidth:3,borderRadius:50,borderColor:"black"}}>
+             <Text style={{textTransform:"uppercase",
+		                         color:"black",
+		                             fontSize:16,
+		                     fontWeight:"bold"}}>
+                                  SIGN UP         
+             </Text>
+
+            
+
+
+       </TouchableOpacity>
+
+      
+
+
         </View>
         <TouchableOpacity style={styles.SignBtn}>
           <Text style={styles.SignText} onPress={nav}>
             Back to sign in
           </Text>
         </TouchableOpacity>
+          <View>
+          <Image
+            style={styles.tinyLogo}
+            source={require('../../../assets/images/bglogin1.png')}
+            />
+
+          </View>
+
+
       </View>
     </View>
+    </ScrollView>
+
+
+
   );
 }
 const styles = StyleSheet.create({
@@ -117,14 +158,17 @@ const styles = StyleSheet.create({
   bottonView: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#474749",
+    backgroundColor: "#ffffff",
   },
   heading: {
-    color: "#fff",
-    fontSize: 40,
+    color: "#A898CF",
+    fontSize: 30,
     fontWeight: "bold",
     marginLeft: 30,
-    marginTop: 60,
+    marginTop: 50,
+
+
+   
   },
   formView: {
     width: "100%",
@@ -136,12 +180,15 @@ const styles = StyleSheet.create({
   TextInput: {
     width: "90%",
     borderWidth: 1,
-    borderColor: "#fff",
+    borderColor: "grey",
     height: 52,
-    borderRadius: 10,
+    borderRadius: 20,
     paddingLeft: 5,
     marginTop: 20,
-    color: "#fff",
+    color: "black",
+    textAlign : "center",
+    
+    
   },
   button: {
     width: "90%",
@@ -167,4 +214,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+  tinyLogo: {
+    width: 60,
+    height: 60,
+    alignContent:'center',
+    alignSelf:'center',
+    marginTop: 15,
+  
+  },
+  link:{
+  color: "#9075E3"
+},
+text:{
+  alignItems:"center",
+  alignSelf:"center",
+  justifyContent:'center',
+  textAlign:"center",
+  marginTop:20
+}
 });
