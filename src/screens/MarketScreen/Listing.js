@@ -2,6 +2,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Picker,
   TextInput,
   TouchableOpacity,
   Image,
@@ -26,6 +27,7 @@ const Listing = ({navigation}) => {
   //useState for image picker
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(null);
+
   useEffect(() => {
     (async () => {
       const galleryStatus =
@@ -53,20 +55,6 @@ const Listing = ({navigation}) => {
     return <Text>No access to Internal Storage</Text>;
   }
     //image picker ends
-
-  //send data to my listings
-  const handleMyListing = () => {
-    Keyboard.dismiss();
-    setListItems([...listItems, title, price, category, condition, description])
-    setTitle(null);
-    setPrice(null);
-    setCategory(null);
-    setCondition(null);
-    setDescription(null);
-    
-  }
-
-
 
   //upload new listing data to the database
   const addProduct = () => {
@@ -188,28 +176,15 @@ const Listing = ({navigation}) => {
         </Text>
       </View>
 
-      {/* exercises display result to send to cart */}
-
-      {/* This is where the tasks will go! */}
-      <View style={{paddingTop: 80, paddingHorizontal: 20,}}>
-      <View style={{ marginTop: 30 }}>
-        {
-          listItems.map((item, index) => {
-          return <Task key={index} text={item} />;
-        })}
-      </View>
-      </View>
-      {/* exercises display result to send to cart */}
-
       <KeyboardAvoidingView style={styles.container}>
         {
           image && (
           <Image source={{ uri: image }} style={{ width: 100, height: 100 }} />
         )}
-
-        <TouchableOpacity style={styles.noImage} onPress={() => pickImage()}>
+        {!image ? <TouchableOpacity style={styles.noImage} onPress={() => pickImage()}>
           <Text style={styles.imageBtn}>Add an Image</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> : <></> }
+        
 
         <TextInput
           style={styles.TextInput}
