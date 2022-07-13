@@ -8,17 +8,22 @@ import HomeScreen from './src/screens/SigninScreen/SigninScreen'
 import SignUpScreen from './src/screens/SignUpScreen/SignUpScreen'
 import ForgotPassWordScreen from './src/screens/ForgotPassWordScreen/ForgotPassWordScreen'
 import Tabs from './src/screens/Tabs/Tabs'
+import onBoardScreen from './src/screens/OnboardingScreen/onBoardScreen';
+
+
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-    <Stack.Navigator initialRouteName="SignIn">
+    <Stack.Navigator initialRouteName="onBoardScreen">
       <Stack.Screen name="SignIn" component={HomeScreen} options={{headerShown:false}}/>
       <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown:false}}/>
       <Stack.Screen name="Forgot" component={ForgotPassWordScreen} options={{headerShown:false}}/>
+      <Stack.Screen name="onBoardScreen" component={onBoardScreen} options={{headerShown:false}}/>
       <Stack.Screen name="Tabs" component={Tabs} options={{headerShown:false}}/>
+
     </Stack.Navigator>
   </NavigationContainer>
   );
