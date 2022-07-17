@@ -11,7 +11,10 @@ import {
 import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/FontAwesome";
 
+import baseURL from "../../../assets/common/baseUrl";
+import axios from 'axios'
 
 import Searchbar from "../../../components/SearchBar";
 
@@ -30,35 +33,17 @@ const Home = ({ navigation }) => {
   //Async Storage starts
   //get called on scren loads
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getDataFromDB();
+
+    axios.get(`${baseURL}/market/all`).then((res) => {
+      setProducts(res.data);
+      setAccessory(res.data);
     });
 
-    return unsubscribe;
-  }, [navigation]);
-
-  //get data from DB start...
-  const getDataFromDB = () => {
-    let productList = [];
-    let accessoryList = [];
-    let bookList = [];
-    for (let index = 0; index < Items.length; index++) {
-      if (Items[index].category == "product") {
-        productList.push(Items[index]);
-      } else if (Items[index].category == "accessory") {
-        accessoryList.push(Items[index]);
-      } else if (Items[index].category == "book") {
-        bookList.push(Items[index]);
-      }
+    return () => {
+      setProducts([])
+      setAccessory([])
     }
-
-    setProducts(productList);
-    setAccessory(accessoryList);
-    setBooks(bookList);
-  };
-  //Async Storage ends
-
-  //create a product reusable card
+  }, []);
 
   const ProductCard = ({ data }) => {
     return (
@@ -85,7 +70,7 @@ const Home = ({ navigation }) => {
           }}
         >
           <Image
-            source={data.productImage}
+            source={data.image}
             style={{
               width: "80%",
               height: "80%",
@@ -102,11 +87,11 @@ const Home = ({ navigation }) => {
             marginBottom: 2,
           }}
         >
-          {data.productName}
+          {data.title}
         </Text>
 
         {/*Display product Price based on category */}
-        <Text>R {data.productPrice}</Text>
+        <Text>R {data.price}</Text>
       </TouchableOpacity>
     );
   };
@@ -115,7 +100,12 @@ const Home = ({ navigation }) => {
     <View style={styles.container}>
       {/*Header (Campus Market title)*/}
       <View
-        style={{ height: "20%", position:'static', backgroundColor: "#3F569C", borderRadius: 10 }}
+        style={{
+          height: "20%",
+          position: "static",
+          backgroundColor: "#3F569C",
+          borderRadius: 10,
+        }}
       >
         <View
           style={{
@@ -156,31 +146,8 @@ const Home = ({ navigation }) => {
 
       <StatusBar backgroundColor={COLOURS.white} barStyle="dark-content" />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View
-          style={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: 16,
-          }}
-        >
-          <TouchableOpacity onPress={() => navigation.navigate("MyCart")}>
-            {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
-            <MaterialCommunityIcons
-              name="cart"
-              style={{
-                fontSize: 18,
-                color: COLOURS.backgroundMedium,
-                padding: 12,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: COLOURS.backgroundLight,
-              }}
-            />
-            <Text>Update</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => navigation.navigate("MyListings")}>
+        <View style={styles.buttonContainer1}>
+          <TouchableOpacity style={styles.btnAddProduct} onPress={() => navigation.navigate("Listing")}>
             {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
             <MaterialCommunityIcons
               name="cart"
@@ -193,11 +160,47 @@ const Home = ({ navigation }) => {
                 borderColor: COLOURS.backgroundLight,
               }}
             >
-            <Text>My Listings</Text>
+              <Text>Sell</Text>
+            </MaterialCommunityIcons>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnAddProduct} onPress={() => navigation.navigate("MyListings")}>
+            {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
+            <MaterialCommunityIcons
+              name="cart"
+              style={{
+                fontSize: 18,
+                color: COLOURS.backgroundMedium,
+                padding: 12,
+                borderRadius: 10,
+                borderWidth: 1,
+                borderColor: COLOURS.backgroundLight,
+              }}
+            >
+              <Text>Products</Text>
             </MaterialCommunityIcons>
           </TouchableOpacity>
         </View>
 
+        {/*Button Container*/}
+        <View>
+          {/*Button Container*/}
+          <View style={styles.buttonContainer1}>
+            <TouchableOpacity
+              style={styles.btnAddProduct}
+              onPress={() => navigation.navigate("Listing")}
+            >
+              <Icon name="shopping-bag" size={18} color="white" />
+              <Text style={styles.buttonText}>Sell</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnAddProduct}
+              onPress={() => navigation.navigate("MyListings")}
+            >
+              <Icon name="shopping-bag" size={18} color="white" />
+              <Text style={styles.buttonText}>Products</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
         {/*products card*/}
         <View
           style={{
@@ -260,132 +263,6 @@ const Home = ({ navigation }) => {
             })}
           </View>
         </View>
-
-        {/*Duplicate (accessory card)*/}
-        <View
-          style={{
-            padding: 16,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: COLOURS.black,
-                  fontWeight: "500",
-                  letterSpacing: 1,
-                }}
-              >
-                Accessories
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: COLOURS.black,
-                  fontWeight: "400",
-                  opacity: 0.5,
-                  marginLeft: 10,
-                }}
-              ></Text>
-            </View>
-            <Text
-              style={{
-                fontSize: 14,
-                color: COLOURS.blue,
-                fontWeight: "400",
-              }}
-            >
-              SeeAll
-            </Text>
-          </View>
-          {/*calling the ProductCard reusable component display Puroduct details in the home screen*/}
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-around",
-            }}
-          >
-            {accessory.map((data) => {
-              return <ProductCard data={data} key={data.id} />;
-            })}
-          </View>
-        </View>
-
-        {/*Duplicate (Books card)*/}
-        <View
-          style={{
-            padding: 16,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: COLOURS.black,
-                  fontWeight: "500",
-                  letterSpacing: 1,
-                }}
-              >
-                Books
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: COLOURS.black,
-                  fontWeight: "400",
-                  opacity: 0.5,
-                  marginLeft: 10,
-                }}
-              ></Text>
-            </View>
-            <Text
-              style={{
-                fontSize: 14,
-                color: COLOURS.blue,
-                fontWeight: "400",
-              }}
-            >
-              SeeAll
-            </Text>
-          </View>
-          {/*calling the ProductCard reusable component display Puroduct details in the home screen*/}
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-around",
-            }}
-          >
-            {books.map((data) => {
-              return <ProductCard data={data} key={data.id} />;
-            })}
-          </View>
-        </View>
       </ScrollView>
     </View>
   );
@@ -399,5 +276,28 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: COLOURS.white,
+  },
+  btnContainer: {
+    marginBottom: 160,
+    backgroundColor: "white",
+  },
+  buttonContainer1: {
+    margin: 20,
+    alignSelf: "center",
+    flexDirection: "row",
+  },
+  buttonText: {
+    marginLeft: 4,
+    color: "COLOURS.backgroundMedium",
+  },
+  btnAddProduct: {
+    flexDirection: "row",
+    borderRadius: 3,
+    //padding: 10,
+    margin: 5,
+    justifyContent: "center",
+    //background: transparent,
+    //backgroundColor: COLOURS.backgroundLight,
+    //width: 100,
   },
 });
