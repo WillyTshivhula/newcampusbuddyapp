@@ -25,7 +25,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { Card, Title, Paragraph, Appbar } from "react-native-paper";
 
-export default function ChatRoom() {
+export default function ChatRoom({route}) {
   const [users, setUsers] = useState([]);
   const [chat, setChat] = useState("");
   const [text, setText] = useState("");
@@ -44,6 +44,7 @@ export default function ChatRoom() {
       querySnapshot.forEach((doc) => {
         users.push(doc.data());
       });
+      
       setUsers(users);
       //N.B pass the email from market via params to this component.
       //N.B check if params has email or not then 
