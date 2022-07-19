@@ -7,70 +7,71 @@ import {
   TouchableHighLight,
   TouchableOpacity,
   Dimensions,
-  Button, 
-  Modal
+  Button,
+  Modal,
 } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome"
-
-
+import Icon from "react-native-vector-icons/FontAwesome";
 
 var { width } = Dimensions.get("window");
 
 const ListItem = (props) => {
-
-    const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <View>
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-                setModalVisible(false)
-            }}
-        >
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                    <TouchableOpacity
-                        underlayColor="#E8E8E8"
-                        onPress={() => {
-                            setModalVisible(false)
-                        }}
-                        style={{
-                            alignSelf: "flex-end",
-                            position: "absolute",
-                            top: 5,
-                            right: 10,
-                        }}
-                    >
-                        <Icon name="close" size={20} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnEdit}  
-                        onPress={() => [
-                            props.navigation.navigate("Listing", { item: props}),
-                            setModalVisible(false)
-                        ]}
-                    >
-                        <Text style={styles.textStyle}>Edit</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                        style={styles.btnDelete}
-                        onPress={() => [props.delete(props._id), setModalVisible(false)]}
-                    >
-                        <Text style={styles.textStyle}>Delete</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              underlayColor="#E8E8E8"
+              onPress={() => {
+                setModalVisible(false);
+              }}
+              style={{
+                alignSelf: "flex-end",
+                position: "absolute",
+                top: 5,
+                right: 10,
+              }}
+            >
+              <Icon name="close" size={20} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnEdit}
+              onPress={() => [
+                props.navigation.navigate("ProductForm", { item: props }),
+                setModalVisible(false),
+              ]}
+            >
+              <Text style={styles.textStyle}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnDelete}
+              onPress={() => [props.delete(props._id), setModalVisible(false)]}
+            >
+              <Text style={styles.textStyle}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
       <TouchableOpacity
         onPress={() => {
-            props.navigation.navigate("ProductInfo", { item: props })//navigate to product Info for the particular item
+          props.navigation.navigate("ProductInfo", { item: props }); //navigate to product Info for the particular item
         }}
         onLongPress={() => setModalVisible(true)}
-        style={[styles.container, {
+        style={[
+          styles.container,
+          {
             backgroundColor: props.index % 2 == 0 ? "white" : "gainsboro",
-        }]}
+          },
+        ]}
       >
         <Image
           source={{
@@ -83,7 +84,7 @@ const ListItem = (props) => {
         />
         <Text style={styles.item}>{props.brand}</Text>
         <Text style={styles.item} numberOfLines={1} ellipsizeMode="tail">
-          {props.name}
+          {props.title}
         </Text>
         {/*<Text style={styles.item} numberOfLines={1} ellipsizeMode="tail">{props.category.name}</Text>*/}
         <Text style={styles.item}>R {props.price}</Text>
@@ -133,27 +134,27 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   btnEdit: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: 3,
     padding: 10,
     margin: 5,
-    justifyContent: 'center',
+    justifyContent: "center",
     //background: transparent,
     backgroundColor: "#62b1f6",
     width: 100,
   },
   btnDelete: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderRadius: 3,
     padding: 10,
     margin: 5,
-    justifyContent: 'center',
+    justifyContent: "center",
     //background: transparent,
     width: 100,
-    backgroundColor: '#f40105',
+    backgroundColor: "#f40105",
   },
   textStyle: {
     color: "white",
     fontWeight: "bold",
-  }
+  },
 });

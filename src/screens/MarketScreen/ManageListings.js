@@ -3,6 +3,7 @@ import {
   StyleSheet,
   TextInput,
   Text,
+  SafeAreaView,
   View,
   Image,
   FlatList,
@@ -14,11 +15,9 @@ import {
 import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Searchbar from "../../../components/SearchBar";
-import { SearchBar } from "react-native-screens";/////
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useFocusEffect } from "@react-navigation/native";
-import ListItem from '../MarketScreen/ListItem'
+import ListItem from "../MarketScreen/ListItem";
+import {  useSafeAreaInsets } from "react-native-safe-area-context"; //
 
 import axios from "axios";
 import baseURL from "../../../assets/common/baseUrl";
@@ -47,7 +46,7 @@ const ListHeader = () => {
 };
 
 const ManageListings = (props) => {
-
+  const insets = useSafeAreaInsets();
   const [productList, setProductList] = useState();
   const [productFilter, setProductFilter] = useState();
   const [loading, setLoading] = useState(true);
@@ -62,19 +61,20 @@ const ManageListings = (props) => {
         })
         .catch((error) => console.log(error));
 
-      axios.get(`${baseURL}/products`).then((res) => {
+      axios.get(`${baseURL}/market/all`)
+      .then((res) => {
         setProductList(res.data);
         setProductFilter(res.data);
         setLoading(false);
-      });
+      })
 
       return () => {
         setProductList();
         setProductFilter();
         setLoading(true);
-      };
+      }
     }, [])
-  );
+  )
 
   //searchBar function
   const searchProduct = (text) => {
@@ -90,24 +90,23 @@ const ManageListings = (props) => {
 
   // Delete Product Function
   const deleteProduct = (id) => {
-      axios
-          .delete(`${baseURL}/products/${id}`, {
-              headers: { Authorization: `Bearer ${token}` },
-          })
-          .then((res) => {
-            const products = productFilter.filter((item) => item.id !== id)
-            setProductFilter(products)
-          })
-          .catch((error) => console.log(error))
-  }
+    axios
+      .delete(`${baseURL}/market/remove/${id}`)
+      .then((res) => {
+        const products = productFilter.filter((item) => item.id !== id)
+        setProductFilter(products)
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
-    <View
+    <SafeAreaView
       style={{
         backgroundColor: COLOURS.white,
         flex: 1,
         width: "100%",
         height: "100%",
+        marginTop: insets.top,
       }}
     >
       <View
@@ -115,7 +114,7 @@ const ManageListings = (props) => {
           height: "20%",
           position: "static",
           backgroundColor: "#3F569C",
-          borderRadius: 10,
+          
         }}
       >
         <View
@@ -149,7 +148,7 @@ const ManageListings = (props) => {
               marginLeft: 30,
             }}
           >
-            My Listings
+            Products
           </Text>
         </View>
 
@@ -175,11 +174,10 @@ const ManageListings = (props) => {
       <View style={styles.buttonContainer1}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => props.navigation.navigate("Listing")}
+          onPress={() => props.navigation.navigate("ProductForm")}
         >
           <Text style={styles.buttonText}>Add Product</Text>
         </TouchableOpacity>
-        
       </View>
 
       {/*Display products uploaded by seller */}
@@ -205,8 +203,7 @@ const ManageListings = (props) => {
         )}
       </ScrollView>
       {/*//////////////////////////////// */}
-
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -241,7 +238,7 @@ const styles = StyleSheet.create({
   listHeader: {
     flexDirection: "row",
     padding: 5,
-    BackgroundColor: "gainsboro",
+    backgroundColor: "gainsboro",
   },
   headerItem: {
     margin: 3,
@@ -304,7 +301,7 @@ const styles = StyleSheet.create({
   buttonText: {
     marginLeft: 4,
     color: COLOURS.backgroundMedium,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   btnAddProduct: {
     flexDirection: "row",

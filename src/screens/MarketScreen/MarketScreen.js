@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
+  SafeAreaView,
   View,
   Text,
   StatusBar,
@@ -12,13 +13,15 @@ import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useSafeAreaInsets } from "react-native-safe-area-context"; //
 
 import baseURL from "../../../assets/common/baseUrl";
-import axios from 'axios'
+import axios from "axios";
 
 import Searchbar from "../../../components/SearchBar";
 
 const Home = ({ navigation }) => {
+   const insets = useSafeAreaInsets();
   const [products, setProducts] = useState([]);
   const [accessory, setAccessory] = useState([]);
   const [books, setBooks] = useState([]);
@@ -33,23 +36,29 @@ const Home = ({ navigation }) => {
   //Async Storage starts
   //get called on scren loads
   useEffect(() => {
-
-    axios.get(`${baseURL}/market/all`).then((res) => {
-      setProducts(res.data);
-      setAccessory(res.data);
-    });
+    axios
+      .get(`${baseURL}/market/all`)
+      .then((res) => {
+        setProducts(res.data);
+        setAccessory(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     return () => {
-      setProducts([])
-      setAccessory([])
-    }
+      setProducts([]);
+      setAccessory([]);
+    };
   }, []);
 
   const ProductCard = ({ data }) => {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("ProductInfo", { productID: data.id })
+          navigation.navigate("ProductInfo", {
+            data: [data],
+          })
         }
         style={{
           width: "48%",
@@ -97,14 +106,15 @@ const Home = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/*Header (Campus Market title)*/}
       <View
         style={{
           height: "20%",
           position: "static",
           backgroundColor: "#3F569C",
-          borderRadius: 10,
+          borderBottomRadius: 10,
+          marginTop: insets.top,
         }}
       >
         <View
@@ -124,7 +134,7 @@ const Home = ({ navigation }) => {
           >
             Marketplace
           </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Listing")}>
+          <TouchableOpacity onPress={() => navigation.navigate("ProductForm")}>
             {/*Entypo generates the market icon (in the below codes)*/}
             <Entypo
               name="shopping-bag"
@@ -146,11 +156,16 @@ const Home = ({ navigation }) => {
 
       <StatusBar backgroundColor={COLOURS.white} barStyle="dark-content" />
       <ScrollView showsVerticalScrollIndicator={false}>
+
+        {/*Button Container*/}
         <View style={styles.buttonContainer1}>
-          <TouchableOpacity style={styles.btnAddProduct} onPress={() => navigation.navigate("Listing")}>
+          <TouchableOpacity
+            style={styles.btnAddProduct}
+            onPress={() => navigation.navigate("ProductForm")}
+          >
             {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
-            <MaterialCommunityIcons
-              name="cart"
+            <Entypo
+              name="shopping-bag"
               style={{
                 fontSize: 18,
                 color: COLOURS.backgroundMedium,
@@ -161,12 +176,15 @@ const Home = ({ navigation }) => {
               }}
             >
               <Text>Sell</Text>
-            </MaterialCommunityIcons>
+            </Entypo>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btnAddProduct} onPress={() => navigation.navigate("MyListings")}>
+          <TouchableOpacity
+            style={styles.btnAddProduct}
+            onPress={() => navigation.navigate("MyListings")}
+          >
             {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
             <MaterialCommunityIcons
-              name="cart"
+              //name="cart"
               style={{
                 fontSize: 18,
                 color: COLOURS.backgroundMedium,
@@ -181,27 +199,10 @@ const Home = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        {/*Button Container*/}
-        <View>
-          {/*Button Container*/}
-          <View style={styles.buttonContainer1}>
-            <TouchableOpacity
-              style={styles.btnAddProduct}
-              onPress={() => navigation.navigate("Listing")}
-            >
-              <Icon name="shopping-bag" size={18} color="white" />
-              <Text style={styles.buttonText}>Sell</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btnAddProduct}
-              onPress={() => navigation.navigate("MyListings")}
-            >
-              <Icon name="shopping-bag" size={18} color="white" />
-              <Text style={styles.buttonText}>Products</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        {/*products card*/}
+        {/*Button Container ends here*/}
+        
+       
+        {/*products card starts here*/}
         <View
           style={{
             padding: 16,
@@ -264,7 +265,7 @@ const Home = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

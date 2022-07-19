@@ -14,6 +14,8 @@ import Listing from './src/screens/MarketScreen/Listing';
 import ManageListings from './src/screens/MarketScreen/ManageListings';
 import  ListItem from './src/screens/MarketScreen/ListItem'
 
+import ProductForm from './src/screens/MarketScreen/ProductForm';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -21,7 +23,8 @@ export default function App() {
     <NavigationContainer>
     <Stack.Navigator initialRouteName="Home">
       
-      
+      <Stack.Screen name="ProductForm" component={ProductForm} options={{headerShown:false}}/>
+
       <Stack.Screen name="Home" component={MarketScreen} options={{headerShown:false}}/>
       <Stack.Screen name="ListItem" component={ListItem} options={{headerShown:false}}/>
       <Stack.Screen name="MyListings" component={ManageListings} options={{headerShown:false}}/>

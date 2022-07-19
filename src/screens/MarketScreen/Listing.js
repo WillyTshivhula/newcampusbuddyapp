@@ -11,7 +11,9 @@ import {
   TouchableOpacity,
   Image,
   KeyboardAvoidingView,
+  ScrollView,
   Keyboard,
+  Alert,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { COLOURS, Items } from "../../../components/database/Database";
@@ -20,7 +22,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context"; //
-import Toast from "react-native-toast-message"
+import Toast from "react-native-toast-message";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
 
@@ -31,7 +33,6 @@ import axios from "axios";
 function Sell(props) {
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
   const [condition, setCondition] = useState("");
   const [description, setDescription] = useState("");
   const [value, setvalue] = useState("");
@@ -42,18 +43,16 @@ function Sell(props) {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-
     //edit or update product
-    if(!props.route.params) {
-        setItem(null);
+    if (!props.route.params) {
+      setItem(null);
     } else {
-        setItem(props.route.params.item);
-        setTitle(props.route.params.item.title);
-        setPrice(props.route.params.item.price.toString());
-        setCategory(props.route.params.item.category);
-        setCondition(props.route.params.item.condition);
-        setDescription(props.route.params.item.description);
-        setImage(props.route.params.item.image);
+      setItem(props.route.params.item);
+      setTitle(props.route.params.item.title);
+      setPrice(props.route.params.item.price.toString());
+      setCondition(props.route.params.item.condition);
+      setDescription(props.route.params.item.description);
+      //setImage(props.route.params.item.image);
     }
 
     // Image Picker
@@ -87,85 +86,58 @@ function Sell(props) {
   //upload new listing data to the database
   const addProduct = () => {
     if (
-      image == "" ||
       title == "" ||
       price == "" ||
-      category == "" ||
       condition == "" ||
       description == ""
     ) {
-      setError("Please fill in the form correctly");
+      Alert.alert("Warning", "Please fill in the form correctly", [
+        { text: "Ok" }
+      ]);
     }
-    let formData = new FormData();
+    else {
+      const data = {
+      title: title,
+      price: price,
 
-    const newImageUri = "file:///" + image.split("file:/").join("");
+      condition: condition,
+      description: description,
+      };
 
-    formData.append("image", {
-      uri: newImageUri,
-      type: mime.getType(newImageUri),
-      name: newImageUri.split("/").pop(),
-    });
-    formData.append("name", title);
-    formData.append("price", price);
-    formData.append("category", category);
-    formData.append("condition", condition);
-    formData.append("description", description);
-
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Authorization: "Bearer ${token}",
-      },
-    };
-
-    if(item !== null) {
-        axios
-        .put(`${baseURL}/products/${item.id}`, formData)
-        .then((res) => {
-            if (res.status == 200 || res.status == 201) {
-              Toast.show({
-                topOffset: 60,
-                type: "success",
-                text1: "Product successfuly updated",
-                text2: "",
-              });
-              setTimeout(() => {
-                props.navigation.navigate("MyListing");
-              }, 500);
-            }
-          })
-          .catch((error) => {
-            Toast.show({
-              topOffset: 60,
-              type: "error",
-              text1: "Something went wrong",
-              text2: "Please try again",
-            })
-          })
-    } else {
-        axios
-          .post(`${baseURL}/products`, formData)
+      if(item !== null) {
+          axios
+          .put(`${baseURL}/market/update/${item.id}`, data)
           .then((res) => {
             if (res.status == 200 || res.status == 201) {
-              Toast.show({
-                topOffset: 60,
-                type: "success",
-                text1: "New Product added",
-                text2: "",
-              });
+              Alert.alert("Suuccess", "Product successfuly updated", [
+                { text: "Ok" }
+              ]);
               setTimeout(() => {
-                props.navigation.navigate("MyListing");
+                props.navigation.navigate("MyListings");
               }, 500);
             }
           })
           .catch((error) => {
-            Toast.show({
-              topOffset: 60,
-              type: "error",
-              text1: "Something went wrong",
-              text2: "Please try again",
-            });
+            Alert.alert("Error", "Something went wrong, Please try again", [{ text: "Ok" }]);
           });
+      } else {
+          axios
+        .post(`${baseURL}/market/addNew`, data)
+        .then((res) => {
+          if (res.status == 200 || res.status == 201) {
+            Alert.alert("Success", "New Product successfully added", [{ text: "Ok" }]);
+            setTimeout(() => {
+              props.navigation.navigate("MyListings");
+            }, 500);
+          }
+        })
+        .catch((error) => {
+          Alert.alert("Success", "Something went wrong, Please try again", [
+            { text: "Ok" },
+          ]);
+        });
+      }
+      
     }
     
   };
@@ -193,6 +165,9 @@ function Sell(props) {
         <TextInput
           style={styles.TextInput}
           placeholder={"Title"}
+          name="title"
+          id="title"
+          value={title}
           placeholderTextColor={"grey"}
           onChangeText={(title) => setTitle(title)}
         />
@@ -200,18 +175,19 @@ function Sell(props) {
           style={styles.TextInput}
           placeholder={"Price"}
           keyboardType={"numeric"}
+          name="bpricerand"
+          id="price"
+          value={price}
           placeholderTextColor={"grey"}
           onChangeText={(price) => setPrice(price)}
         />
-        <TextInput
-          style={styles.TextInput}
-          placeholder={"Category"}
-          placeholderTextColor={"grey"}
-          onChangeText={(category) => setCategory(category)}
-        />
+
         <TextInput
           style={styles.TextInput}
           placeholder={"Condition"}
+          name="condition"
+          id="condition"
+          value={condition}
           placeholderTextColor={"grey"}
           onChangeText={(condition) => setCondition(condition)}
         />
@@ -220,14 +196,14 @@ function Sell(props) {
           multiline={true}
           numberOfLines={4}
           placeholder={"Description"}
+          name="description"
+          id="description"
+          value={description}
           placeholderTextColor={"grey"}
           onChangeText={(description) => setDescription(description)}
         />
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => addProduct()}
-        >
+        <TouchableOpacity style={styles.button} onPress={() => addProduct()}>
           <Text style={styles.buttonText}>Create New Listing</Text>
         </TouchableOpacity>
         <Text style={styles.textStyle}>{value}</Text>
@@ -243,8 +219,8 @@ function Service() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [value, setvalue] = useState("");
-  return (  
-    <View style={{ flex: 1,}}>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView style={styles.container}>
         <TextInput
           style={styles.TextInput}
@@ -287,7 +263,7 @@ function Service() {
         </TouchableOpacity>
         <Text style={styles.textStyle}>{value}</Text>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }
 

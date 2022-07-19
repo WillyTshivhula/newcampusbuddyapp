@@ -17,7 +17,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ProductInfo = ({ route, navigation }) => {
-  const { productID } = route.params;
+  const { data } = route.params;
 
   const [product, setProduct] = useState({});
 
@@ -38,15 +38,10 @@ const ProductInfo = ({ route, navigation }) => {
   //get product data by productID
 
   const getDataFromDB = async () => {
-    for (let index = 0; index < Items.length; index++) {
-      if (Items[index].id == productID) {
-        await setProduct(Items[index]);
-        return;
-      }
-    }
+    data.forEach((element) => {
+      setProduct(element);
+    });
   };
-
-  
 
   //product horizontal scroll product card
   const renderProduct = ({ item, index }) => {
@@ -72,8 +67,6 @@ const ProductInfo = ({ route, navigation }) => {
   };
 
   return (
-
-    
     <View
       style={{
         width: "100%",
@@ -108,7 +101,7 @@ const ProductInfo = ({ route, navigation }) => {
               paddingLeft: 16,
             }}
           >
-            <TouchableOpacity onPress={() => navigation.goBack("Home")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
               <Entypo
                 name="chevron-left"
                 style={{
@@ -122,7 +115,9 @@ const ProductInfo = ({ route, navigation }) => {
             </TouchableOpacity>
           </View>
           <FlatList
-            data={product.productImageList ? product.productImageList : null}
+            data={
+              "https://pixabay.com/photos/clock-money-growth-grow-time-2696234/"
+            }
             horizontal
             renderItem={renderProduct}
             showsHorizontalScrollIndicator={false}
@@ -216,9 +211,8 @@ const ProductInfo = ({ route, navigation }) => {
                 maxWidth: "84%",
               }}
             >
-              {product.productName}
+              {product.title}
             </Text>
-            
           </View>
           <Text
             style={{
@@ -274,7 +268,6 @@ const ProductInfo = ({ route, navigation }) => {
               </View>
               <Text> Rustaveli Ave 57,{"\n"}17-001, Batume</Text>
             </View>
-            
           </View>
           <View
             style={{
@@ -290,9 +283,8 @@ const ProductInfo = ({ route, navigation }) => {
                 marginBottom: 4,
               }}
             >
-              R {product.productPrice}.00
+              R {product.price}.00
             </Text>
-            
           </View>
         </View>
       </ScrollView>
