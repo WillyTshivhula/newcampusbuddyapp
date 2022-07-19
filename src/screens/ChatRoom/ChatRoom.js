@@ -1,223 +1,167 @@
 // @refresh reset
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { GiftedChat } from 'react-native-gifted-chat'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StyleSheet, TextInput, View, YellowBox, Button,TouchableOpacity, Image,Text,Animated, ScrollView } from 'react-native'
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  addDoc,
+  Timestamp,
+  orderBy,
+  setDoc,
+  doc,
+  getDoc,
+  updateDoc,
+} from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { db, auth, storage } from "../../../firebaseSdk";
+import { View, Text } from "react-native";
+import Users from "../Component/Users";
+import { GiftedChat } from "react-native-gifted-chat";
+import MessageForm from "../Component/MessageForm";
+import Header from "../Component/Header";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/firestore';
+import { Card, Title, Paragraph, Appbar } from "react-native-paper";
 
-import Ionicons from '@expo/vector-icons/Ionicons';
-import * as WebBrowser from 'expo-web-browser';
+export default function ChatRoom() {
+  const [users, setUsers] = useState([]);
+  const [chat, setChat] = useState("");
+  const [text, setText] = useState("");
+  const [msgs, setMsgs] = useState([]);
+  const [userName, setUsername] = useState([]);
+  const [hidelist, setHidelist] = useState(false);
+  const user1 = auth.currentUser.uid;
 
-
-
-const firebaseConfig = {
-  
-    apiKey: "AIzaSyCgRYUDfcR6miFnpIYHjvmN86IZoiwnSTo",
-    authDomain: "react-native-chat-1d28b.firebaseapp.com",
-    projectId: "react-native-chat-1d28b",
-    storageBucket: "react-native-chat-1d28b.appspot.com",
-    messagingSenderId: "114561333119",
-    appId: "1:114561333119:web:ffcf8c49c693fdbaf20c4a"
-  
-}
-
-if (firebase.apps.length === 0) {
-    firebase.initializeApp(firebaseConfig)
-}
-
-YellowBox.ignoreWarnings(['Setting a timer for a long period of time'])
-
-const db = firebase.firestore()
-const chatsRef = db.collection('chats')
-
-export default function App() {
-    const [user, setUser] = useState(null)
-    const [name, setName] = useState('')
-    const [messages, setMessages] = useState([])
-    
-
-    useEffect(() => {
-        readUser()
-        const unsubscribe = chatsRef.onSnapshot((querySnapshot) => {
-            const messagesFirestore = querySnapshot
-                .docChanges()
-                .filter(({ type }) => type === 'added')
-                .map(({ doc }) => {
-                    const message = doc.data()
-                    //createdAt is firebase.firestore.Timestamp instance
-                    //https://firebase.google.com/docs/reference/js/firebase.firestore.Timestamp
-                    return { ...message, createdAt: message.createdAt.toDate() }
-                })
-                .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-            appendMessages(messagesFirestore)
-        })
-        return () => unsubscribe()
-    }, [])
-
-    const appendMessages = useCallback(
-        (messages) => {
-            setMessages((previousMessages) => GiftedChat.append(previousMessages, messages))
-        },
-        [messages]
-    )
-
-    async function readUser() {
-        const user = await AsyncStorage.getItem('user')
-        if (user) {
-            setUser(JSON.parse(user))
-        }
-    }
-    async function handlePress() {
-        const _id = Math.random().toString(36).substring(7)
-        const user = { _id, name }
-        await AsyncStorage.setItem('user', JSON.stringify(user))
-        setUser(user)
-    }
-    async function handleSend(messages) {
-        const writes = messages.map((m) => chatsRef.add(m))
-        await Promise.all(writes)
-    }
-
-   
-
+  useEffect(() => {
+    const usersRef = collection(db, "users");
+    // create query object
+    const q = query(usersRef, where("uid", "not-in", [user1]));
+    // execute query
+    const unsub = onSnapshot(q, (querySnapshot) => {
+      let users = [];
+      querySnapshot.forEach((doc) => {
+        users.push(doc.data());
+      });
+      setUsers(users);
+      //N.B pass the email from market via params to this component.
+      //N.B check if params has email or not then 
+      //N.B filter out object that include user email from params.
+      //N.B else continue with the normal flow.
       
+      console.log(users);
+    });
+    return () => unsub();
+  }, []);
+  const _goBack = () => setHidelist(false);
 
-    const fadeAnim = useRef(new Animated.Value(0)).current;
-    const handlePresss=()=>{
-        Animated.timing(fadeAnim, {
-            toValue:1,
-            duration:5000,
-            useNativeDriver:true,
-        }).start();
+  const selectUser = async (user) => {
+    setChat(user);
+    setUsername(user.name);
+    setHidelist(true)
+    const user2 = user.uid;
+    const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+
+    const msgsRef = collection(db, "messages", id, "chat");
+    const q = query(msgsRef, orderBy("createdAt", "asc"));
+
+    onSnapshot(q, (querySnapshot) => {
+      let msgs = [];
+      querySnapshot.forEach((doc) => {
+        msgs.push(doc.data());
+      });
+      setMsgs(msgs);
+      console.log(msgs);
+    });
+
+    // get last message b/w logged in user and selected user
+    const docSnap = await getDoc(doc(db, "lastMsg", id));
+    // if last message exists and message is from selected user
+    if (docSnap.data() && docSnap.data().from !== user1) {
+      // update last message doc, set unread to false
+      await updateDoc(doc(db, "lastMsg", id), { unread: false });
     }
+  };
 
-    
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    if (!user) {
-        return (
-            <ScrollView>
-            <View style={styles.container}>
-                
-                 <View style={styles.circle} />
-                   <View style={{marginTop:64}}>
-                   <Image source={require("../../../assets/images/chatlogo.png")} style={{width:120,height:120,alignSelf: "center"}}/>
-            </View>
+    const user2 = chat.uid;
 
-            <View style={{marginHorizontal:32}}>
-            <Text style={styles.header}>Username</Text>
-                <TextInput style={styles.input} placeholder="Campus Buddy Chat " value={name} onChangeText={setName} />
+    const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
+    await addDoc(collection(db, "messages", id, "chat"), {
+      text,
+      from: user1,
+      to: user2,
+      createdAt: Timestamp.fromDate(new Date()),
+      media: "",
+    });
 
-                <Text style={styles.text}>
-             By Login in to Campus Buddy chat, you confirm that you accept our 
-             <Text style={styles.link} onPress={async () => {
-             await WebBrowser.openAuthSessionAsync('https://www.example.com', 'https://www.google.com');
-             }}>Terms of Use</Text> and
-             <Text style={styles.link} onPress={async () => {
-             await WebBrowser.openAuthSessionAsync('https://www.example.com', 'https://www.google.com');
-             }}> Privacy Policy </Text> </Text>
+    await setDoc(doc(db, "lastMsg", id), {
+      text,
+      from: user1,
+      to: user2,
+      createdAt: Timestamp.fromDate(new Date()),
+      media: "",
+      unread: true,
+    });
 
-
-
-           
-                <TouchableOpacity style={styles.button} onPress={handlePresss}>
-                <Text style={styles.text}>
-                     Accept
-                </Text>
-                </TouchableOpacity>
-           
-
-                <Animated.View style={{opacity:fadeAnim}}>
-
-                <View style={{alignItems:"flex-end",marginTop:5}}>
-                <TouchableOpacity style={styles.continue} onPress={handlePress}>
-                    <Ionicons name="md-arrow-forward" size={24} color ="#FFF"/>
-                </TouchableOpacity>
-                
-                </View>
-
-                </Animated.View>
-
-
-            </View>
+    setText("");
+  };
+  return (
+    <KeyboardAwareScrollView>
+      {hidelist ?  
+        <Appbar.Header>
+        <Appbar.BackAction onPress={_goBack} />
+        <Appbar.Content title={userName} />
+      </Appbar.Header>
+        :<Header headerText="Chatroom" /> }
+      
+      {hidelist ? null : (
+        <View>
+          {users.map((user) => (
+            <Users
+              key={user.uid}
+              user={user}
+              selectUser={selectUser}
+              user1={user1}
+              chat={chat}
+            />
+          ))}
         </View>
+      )}
 
-        </ScrollView>
-        )
-    }
-    return <GiftedChat messages={messages} user={user} onSend={handleSend} />
+      {hidelist ? (
+        <View>
+          <Card>
+            <Card.Content>
+              {/* <Title>{userName}</Title> */}
+              <Paragraph>
+                <Text>
+                  {msgs.length
+                    ? msgs.map((msg, i) => (
+                        <Text key={i}>
+                          {"\n"}
+                          {msg.from === user1 ? "Me : " : `${userName} : `}
+                          {msg.text}
+                        </Text>
+                      ))
+                    : "No chat"}
+                </Text>
+              </Paragraph>
+            </Card.Content>
+          </Card>
+          <View>
+          <MessageForm
+            handleSubmit={handleSubmit}
+            text={text}
+            setText={setText}
+          />
+          </View>
+         
+        </View>
+      ) : null}
+    </KeyboardAwareScrollView>
+  );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor:"#F4F5F7"
-    },
-    input: {
-        height:50,
-        width: '100%',
-        borderWidth: 2,
-        padding: 15,
-        marginBottom: 20,
-        borderColor: 'gray',
-        borderWidth: StyleSheet.hairlineWidth,
-        marginTop: 10,
-        paddingHorizontal:16,
-        color:"#514E5A",
-        fontWeight:"600",
-        borderRadius:30,
-        height:50
-
-    },
-    header:{
-        fontWeight: "800",
-        fontSize:30,
-        color: "#514E5A",
-        marginTop:32,
-        
-    },
-    
-    continue:{
-        width: 70,
-        height:70,
-        borderRadius:70/2,
-        backgroundColor: "#9075E3",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-
-    circle:{
-        width : 200,
-        height:700,
-        borderRadius:500/2,
-        backgroundColor: "#E2E2E2",
-        position : "absolute",
-        left: -105,
-        top:-20,
-        color:"#F4F5F7",
-    },
-    link:{
-        color: "#9075E3"
-      },
-      button:{
-        backgroundColor:"#9075E3",
-        width:100,
-        borderRadius:15,
-        padding:15,
-        margin:5,
-        alignItems: "center",
-        justifyContent: "center",
-        alignSelf:"center"
-        
-    },
-    anim:{
-        backgroundColor:"tomato",
-        width:200,
-        padding:15,
-        borderRadius:15,
-    }
-    
-})
-

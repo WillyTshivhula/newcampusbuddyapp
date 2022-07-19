@@ -3,8 +3,13 @@ import {
     View,
     Text,
   } from "react-native";
+  import Header from "../Component/Header";
 export default function AlertScreen() {
   return (
-    <Text>AlertScreen</Text>
+    <View>
+      <Header headerText="Arlet" />
+    <Text>Arlet</Text>
+  </View>
+    
   )
 }
