@@ -101,7 +101,7 @@ const ProductInfo = ({ route, navigation }) => {
               paddingLeft: 16,
             }}
           >
-            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Market")}>
               <Entypo
                 name="chevron-left"
                 style={{

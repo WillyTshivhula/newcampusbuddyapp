@@ -21,17 +21,18 @@ import Users from "../Component/Users";
 import { GiftedChat } from "react-native-gifted-chat";
 import MessageForm from "../Component/MessageForm";
 import Header from "../Component/Header";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { Card, Title, Paragraph, Appbar } from "react-native-paper";
 
-export default function ChatRoom({route}) {
+export default function ChatRoom({ route }) {
   const [users, setUsers] = useState([]);
   const [chat, setChat] = useState("");
   const [text, setText] = useState("");
   const [msgs, setMsgs] = useState([]);
   const [userName, setUsername] = useState([]);
   const [hidelist, setHidelist] = useState(false);
+  const [canchat, setCanChat] = useState(route.params);
   const user1 = auth.currentUser.uid;
 
   useEffect(() => {
@@ -44,14 +45,23 @@ export default function ChatRoom({route}) {
       querySnapshot.forEach((doc) => {
         users.push(doc.data());
       });
-      
-      setUsers(users);
+      if (canchat !== undefined) {
+        console.log(canchat.username);
+        console.log(users)
+        var newArray = users.filter(function (el) {
+          return el.email.toLowerCase() === canchat.username.toLowerCase() ;
+        });
+        setUsers(newArray);
+        console.log(newArray);
+      } else {
+        setUsers(users);
+        console.log(canchat);
+      }
+
       //N.B pass the email from market via params to this component.
-      //N.B check if params has email or not then 
+      //N.B check if params has email or not then
       //N.B filter out object that include user email from params.
       //N.B else continue with the normal flow.
-      
-      console.log(users);
     });
     return () => unsub();
   }, []);
@@ -60,7 +70,7 @@ export default function ChatRoom({route}) {
   const selectUser = async (user) => {
     setChat(user);
     setUsername(user.name);
-    setHidelist(true)
+    setHidelist(true);
     const user2 = user.uid;
     const id = user1 > user2 ? `${user1 + user2}` : `${user2 + user1}`;
 
@@ -112,13 +122,15 @@ export default function ChatRoom({route}) {
   };
   return (
     <KeyboardAwareScrollView>
-      {hidelist ?  
+      {hidelist ? (
         <Appbar.Header>
-        <Appbar.BackAction onPress={_goBack} />
-        <Appbar.Content title={userName} />
-      </Appbar.Header>
-        :<Header headerText="Chatroom" /> }
-      
+          <Appbar.BackAction onPress={_goBack} />
+          <Appbar.Content title={userName} />
+        </Appbar.Header>
+      ) : (
+        <Header headerText="Chatroom" />
+      )}
+
       {hidelist ? null : (
         <View>
           {users.map((user) => (
@@ -154,13 +166,12 @@ export default function ChatRoom({route}) {
             </Card.Content>
           </Card>
           <View>
-          <MessageForm
-            handleSubmit={handleSubmit}
-            text={text}
-            setText={setText}
-          />
+            <MessageForm
+              handleSubmit={handleSubmit}
+              text={text}
+              setText={setText}
+            />
           </View>
-         
         </View>
       ) : null}
     </KeyboardAwareScrollView>

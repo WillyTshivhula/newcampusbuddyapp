@@ -162,7 +162,7 @@ const ProductForm = (props) => {
           paddingBottom: 16,
         }}
       >
-        <TouchableOpacity onPress={() => props.navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Market")}>
           <MaterialCommunityIcons
             name="chevron-left"
             style={{
