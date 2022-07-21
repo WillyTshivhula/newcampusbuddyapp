@@ -23,8 +23,8 @@ export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator initialRouteName="onBoardScreen">
-    <Stack.Screen name="Chat" component={ChatRoom} options={{headerShown:false}}/>
-    <Stack.Screen name="Home" component={MarketScreen} options={{headerShown:false}}/>
+    {/* <Stack.Screen name="Chat" component={ChatRoom} options={{headerShown:false}}/> */}
+    {/* <Stack.Screen name="Home" component={MarketScreen} options={{headerShown:false}}/> */}
     <Stack.Screen name="ProductForm" component={ProductForm} options={{headerShown:false}}/>
     <Stack.Screen name="ListItem" component={ListItem} options={{headerShown:false}}/>
       <Stack.Screen name="MyListings" component={ManageListings} options={{headerShown:false}}/>

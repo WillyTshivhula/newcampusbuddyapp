@@ -111,7 +111,7 @@ export default function MarketScreen({navigation}) {
   return (
     <KeyboardAwareScrollView >
       {/* <Header headerText="Market" /> */}
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
       {/*Header (Campus Market title)*/}
       <View
         style={{
@@ -271,7 +271,7 @@ export default function MarketScreen({navigation}) {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
 
 
     </KeyboardAwareScrollView>
