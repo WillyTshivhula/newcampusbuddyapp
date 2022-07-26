@@ -13,7 +13,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Keyboard,
-  Alert,
+  Alert,ImageBackground,Button,ActivityIndicator
 } from "react-native";
 import { useState, useEffect } from "react";
 import { COLOURS, Items } from "../../../components/database/Database";
@@ -24,11 +24,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"; //
 import { db, auth, storage } from "../../../firebaseSdk";
 import * as ImagePicker from "expo-image-picker";
 import mime from "mime";
+import { Paragraph, Dialog, Portal } from 'react-native-paper';
 
 import baseURL from "../../../assets/common/baseUrl";
 import axios from "axios";
 import { EmailAuthCredential } from "firebase/auth";
-
+var { height, width } = Dimensions.get("window");
 const ProductForm = (props) => {
   const insets = useSafeAreaInsets();
 
@@ -40,9 +41,12 @@ const ProductForm = (props) => {
   const [error, setError] = useState("");
   const [item, setItem] = useState(null);
   const [email,setEmail] = useState("")
+  const [uploadedImg,setUploadedImg] = useState("")
   //useState for image picker
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(null);
+  const [loading,setLoading] =useState(false)
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     //edit or update product
@@ -67,8 +71,9 @@ const ProductForm = (props) => {
 
   // pick image from gallery
   const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -80,17 +85,15 @@ const ProductForm = (props) => {
       setImage(result.uri);
     }
   };
-  if (hasGalleryPermission === false) {
-    return <Text>No access to Internal Storage</Text>;
-  }
-  //image picker ends
 
   //upload new listing data to the database
   const addProduct = () => {
+   
     if (title == "" || price == "" || condition == "" || description == "") {
       Alert.alert("Warning", "Please fill in the form correctly", [
         { text: "Ok" },
       ]);
+      setLoading(false);
     } else {
       const data = {
         title: title,
@@ -98,12 +101,15 @@ const ProductForm = (props) => {
         email: auth.currentUser.email,
         condition: condition,
         description: description,
+        itemUrl:image
       };
 
       if (item !== null) {
+        setLoading(true);
         axios
           .put(`${baseURL}/market/update/${item.id}`, data)
           .then((res) => {
+            setLoading(false);
             if (res.status == 200 || res.status == 201) {
               Alert.alert("Suuccess", "Product successfuly updated", [
                 { text: "Ok" },
@@ -114,15 +120,18 @@ const ProductForm = (props) => {
             }
           })
           .catch((error) => {
+            setLoading(false);
             Alert.alert("Error", "Something went wrong, Please try again", [
               { text: "Ok" },
             ]);
           });
       } else {
         console.log(data)
+        setLoading(true);
         axios
           .post(`${baseURL}/market/addNew`, data)
           .then((res) => {
+            setLoading(false);
             if (res.status == 200 || res.status == 201) {
               Alert.alert("Success", "New Product successfully added", [
                 { text: "Ok" },
@@ -133,6 +142,7 @@ const ProductForm = (props) => {
             }
           })
           .catch((error) => {
+            setLoading(false);
             Alert.alert("Success", "Something went wrong, Please try again", [
               { text: "Ok" },
             ]);
@@ -163,6 +173,7 @@ const ProductForm = (props) => {
         }}
       >
         <TouchableOpacity onPress={() => props.navigation.navigate("Market")}>
+
           <MaterialCommunityIcons
             name="chevron-left"
             style={{
@@ -193,25 +204,37 @@ const ProductForm = (props) => {
           backgroundColor: "#03cafc",
         }}
       >
+        {loading ?<View style={styles.spinner}>
+            <ActivityIndicator size="large" color="blue" />
+          </View> : 
         <KeyboardAvoidingView style={styles.container}>
-          {/* {image && (
+        
+        {image && (
             <Image
               source={{ uri: image }}
-              style={{ width: 100, height: 100 }}
+              style={{
+                height:Dimensions.get('window').height/2.5,
+               }}
             />
           )}
-          {!image ? (
-            <TouchableOpacity
-              style={styles.noImage}
-              onPress={() => pickImage()}
-            >
-              <Text style={styles.imageBtn}>Add an Image</Text>
-            </TouchableOpacity>
-          ) : (
-            <></>
-          )} */}
+        {!image ? <ImageBackground
+         source={require('../../../assets/images/bg1.jpg')}
+         style={{
+          height:Dimensions.get('window').height/2.5,
+         }}
+        >
+          <View>
+          <Button 
+          style={styles.tinyLogo}
+          title="Pick an image from camera roll" onPress={pickImage} />
 
-          <TextInput
+          </View>
+          
+        </ImageBackground>  :""}
+        
+        <View style={styles.bottomView}>
+        <View style={styles.formView}>
+        <TextInput
             style={styles.TextInput}
             placeholder={"Title"}
             name="title"
@@ -251,12 +274,15 @@ const ProductForm = (props) => {
             placeholderTextColor={"grey"}
             onChangeText={(description) => setDescription(description)}
           />
-
+          
           <TouchableOpacity style={styles.button} onPress={() => addProduct()}>
             <Text style={styles.buttonText}>Create New Listing</Text>
           </TouchableOpacity>
           <Text style={styles.textStyle}>{value}</Text>
-        </KeyboardAvoidingView>
+
+        </View>
+        </View>
+        </KeyboardAvoidingView>}
       </View>
     </View>
   );
@@ -269,7 +295,31 @@ const styles = StyleSheet.create({
     backgroundColor: COLOURS.backgroundLight,
     flex: 1,
     justifyContent: "center",
+    // alignItems: "center",
+  },
+  formView: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
     alignItems: "center",
+    marginTop: 10,
+  },
+  bottomView:{
+    flex:1.5,
+    backgroundColor:'#fff',
+    // bottom:50,
+    position:"relative",
+    top:"-30px",
+    borderTopStartRadius:60,
+    borderTopEndRadius:60,
+
+  },
+  tinyLogo: {
+    justifyContent:'center',
+    alignItems:'center',
+    alignSelf:'center',
+    marginTop: 26,
+  
   },
   imageContainer: {
     width: 50,
@@ -302,6 +352,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+  spinner: {
+    height: height / 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
     fontWeight: "bold",
