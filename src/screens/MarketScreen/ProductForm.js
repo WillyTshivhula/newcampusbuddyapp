@@ -158,7 +158,7 @@ const ProductForm = (props) => {
             }
           })
           .catch((error) => {
-            Alert.alert("Success", "Something went wrong, Please try again", [
+            Alert.alert("Error", "Something went wrong, Please try again", [
               { text: "Ok" },
             ]);
           });
