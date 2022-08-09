@@ -24,12 +24,14 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { useSafeAreaInsets } from "react-native-safe-area-context"; //
 import Toast from "react-native-toast-message";
 import * as ImagePicker from "expo-image-picker";
+import { firebase } from "../../../config2";
 import mime from "mime";
 
 import baseURL from "../../../assets/common/baseUrl";
 import axios from "axios";
 
 const ProductForm = (props) => {
+  const todoRef = firebase.firestore().collection("newData");
   const insets = useSafeAreaInsets();
 
   const [title, setTitle] = useState("");
@@ -57,11 +59,11 @@ const ProductForm = (props) => {
     }
 
     // Image Picker
-    (async () => {
-      const galleryStatus =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      setHasGalleryPermission(galleryStatus.status === "granted");
-    })();
+    // (async () => {
+    //   const galleryStatus =
+    //     await ImagePicker.requestMediaLibraryPermissionsAsync();
+    //   setHasGalleryPermission(galleryStatus.status === "granted");
+    // })();
   }, []);
 
   // pick image from gallery
@@ -84,6 +86,8 @@ const ProductForm = (props) => {
   }
   //image picker ends
 
+  
+
   //upload new listing data to the database
   const addProduct = () => {
     if (title == "" || price == "" || condition == "" || description == "") {
@@ -91,17 +95,17 @@ const ProductForm = (props) => {
         { text: "Ok" },
       ]);
     } else {
-      const data = {
+      const datas = {
         title: title,
         price: price,
-
+        //image: image,
         condition: condition,
         description: description,
       };
 
       if (item !== null) {
         axios
-          .put(`${baseURL}/market/update/${item.id}`, data)
+          .put(`${baseURL}/market/update/${item.id}`, datas)
           .then((res) => {
             if (res.status == 200 || res.status == 201) {
               Alert.alert("Suuccess", "Product successfuly updated", [
@@ -118,8 +122,31 @@ const ProductForm = (props) => {
             ]);
           });
       } else {
+
+        //add to firebase
+        //get the timestamp
+        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+        const data = {
+          image: image,
+          createdAt: timestamp,
+          
+        };
+        todoRef
+          .add(data)
+          .then(() => {
+            // release the new field state
+            setImage("");
+            // release keyboard
+            Keyboard.dismiss();
+          })
+          .catch((error) => {
+            // show an alert in case of error
+            alert(error);
+          });
+        //
+        //add to MySQL
         axios
-          .post(`${baseURL}/market/addNew`, data)
+          .post(`${baseURL}/market/addNew`, datas)
           .then((res) => {
             if (res.status == 200 || res.status == 201) {
               Alert.alert("Success", "New Product successfully added", [

@@ -15,15 +15,14 @@ import ManageListings from './src/screens/MarketScreen/ManageListings';
 import  ListItem from './src/screens/MarketScreen/ListItem'
 
 import ProductForm from './src/screens/MarketScreen/ProductForm';
-import App1 from './src/screens/MarketScreen/App1';
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator initialRouteName="Home">
-
-      <Stack.Screen name="App1" component={App1} options={{headerShown:false}}/>
+      
       <Stack.Screen name="ProductForm" component={ProductForm} options={{headerShown:false}}/>
 
       <Stack.Screen name="Home" component={MarketScreen} options={{headerShown:false}}/>

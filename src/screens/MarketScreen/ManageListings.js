@@ -22,6 +22,7 @@ import {  useSafeAreaInsets } from "react-native-safe-area-context"; //
 import axios from "axios";
 import baseURL from "../../../assets/common/baseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { firebase } from "../../../config2";
 
 var { height, width } = Dimensions.get("window");
 
@@ -52,8 +53,29 @@ const ManageListings = (props) => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState();
 
+  const [users, setUsers] = useState([]);
+  const todoRef = firebase.firestore().collection("newData");
+
   useFocusEffect(
     useCallback(() => {
+      //get data from firebase
+      todoRef.onSnapshot((querySnapshot) => {
+        const users = [];
+        querySnapshot.forEach((doc) => {
+          const { image /*text*/ } = doc.data();
+          users.push({
+            id: doc.id,
+            //heading,
+            image,
+            //text,
+          });
+        });
+        //setUsers(users);
+        setProductList(users);
+        setProductFilter(users);
+      });
+
+      /////
       // Get Token
       AsyncStorage.getItem("jwt")
         .then((res) => {
