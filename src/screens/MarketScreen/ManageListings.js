@@ -36,9 +36,6 @@ const ListHeader = () => {
       <View style={styles.headerItem}>
         <Text style={{ fontWeight: "700" }}>Name</Text>
       </View>
-      {/*<View style={styles.headerItem}>
-          <Text style={{fontWeight: '700'}}>Category</Text>
-        </View> */}
       <View style={styles.headerItem}>
         <Text style={{ fontWeight: "700" }}>Price</Text>
       </View>
