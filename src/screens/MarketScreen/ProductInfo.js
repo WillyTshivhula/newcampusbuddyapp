@@ -102,7 +102,7 @@ const ProductInfo = ({ route, navigation }) => {
               paddingLeft: 16,
             }}
           >
-            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Market")}>
               <Entypo
                 name="chevron-left"
                 style={{
@@ -311,17 +311,25 @@ const ProductInfo = ({ route, navigation }) => {
             alignItems: "center",
           }}
         >
-          <Text
-            style={{
-              fontSize: 12,
-              fontWeight: "500",
-              letterSpacing: 1,
-              color: COLOURS.white,
-              textTransform: "uppercase",
-            }}
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Chat", {
+                username: product.email,
+              })
+            }
           >
-            Message Seller
-          </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: "500",
+                letterSpacing: 1,
+                color: COLOURS.white,
+                textTransform: "uppercase",
+              }}
+            >
+              Message Seller
+            </Text>
+          </TouchableOpacity>
         </TouchableOpacity>
       </View>
     </View>

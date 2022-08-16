@@ -7,6 +7,8 @@ import {
   useWindowDimensions,
   ScrollView,
   TextInput,
+  ImageBackground,
+  Dimensions,
   TouchableOpacity,
 } from "react-native";
 import Logo from "../../../assets/images/Logo_1.jpg";
@@ -21,10 +23,15 @@ export default function ForgotPassWordScreen({ navigation }) {
       email: email,
       newPassword: newPassword,
     };
+
     axios
-      .put("http://10.0.0.7:8080/api/auth/signin", data)
+      .put(
+        "http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/auth/reset",
+        data
+      )
+
       .then((data) => {
-        nav('Tabs')
+        nav("Tabs");
         console.log(data.data.body);
       })
       .catch((err) => console.log(err));
@@ -33,101 +40,179 @@ export default function ForgotPassWordScreen({ navigation }) {
     navigation.navigate("SignIn");
   }
   return (
-    <View style={styles.mainView}>
-      <View style={styles.topView}>
-        <Image source={Logo} style={{ width: 190, height: 80 }} />
-      </View>
-      <View style={styles.bottonView}>
-        <Text style={styles.heading}>Reset password</Text>
-        <View style={styles.formView}>
-          <TextInput
-            style={styles.TextInput}
-            placeholder={"Email Address"}
-            placeholderTextColor={"#fff"}
-            onChangeText={(email) => setEmail(email)}
+    <ScrollView
+      style={{ flex: 1, backgroundColor: "#ffffff" }}
+      showsVerticalScrollIndicator={false}
+    >
+      {/*Brand View*/}
+
+      <ImageBackground
+        source={require("../../../assets/images/bg1.jpg")}
+        style={{
+          height: Dimensions.get("window").height / 2.5,
+        }}
+      >
+        <View>
+          <Image
+            style={styles.tinyLogo}
+            source={require("../../../assets/images/bglogin1.png")}
           />
-          <TextInput
-            style={styles.TextInput}
-            placeholder={"New Password"}
-            placeholderTextColor={"#fff"}
-            secureTextEntry={true}
-            onChangeText={(newPassword) => setNewPassword(newPassword)}
-          />
-          <TouchableOpacity style={styles.button} onPress={register}>
-            <Text style={styles.buttonText}>Reset Password</Text>
-          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.SignBtn} onPress={nav}>
-          <Text style={styles.SignText}>Back to sign in</Text>
-        </TouchableOpacity>
+      </ImageBackground>
+
+      {/*Bottom View*/}
+      <View style={styles.bottomView}>
+        {/*welcome View*/}
+
+        <View style={{ padding: 40 }}>
+          <Text style={{ color: "#A898CF", fontSize: 34, alignSelf: "center" }}>
+            Reset Password
+          </Text>
+          {/*Form*/}
+
+          <View style={styles.formView}>
+            <TextInput
+              style={styles.TextInput}
+              placeholder={"Email Address"}
+              placeholderTextColor={"black"}
+              onChangeText={(email) => setEmail(email)}
+            />
+            <TextInput
+              style={styles.TextInput}
+              placeholder={"New Password"}
+              placeholderTextColor={"black"}
+              secureTextEntry={true}
+              onChangeText={(newPassword) => setNewPassword(newPassword)}
+            />
+
+            <TouchableOpacity
+              onPress={register}
+              style={{
+                width: "90%",
+                justifyContent: "center",
+                alignItems: "center",
+                marginHorizontal: 50,
+                marginVertical: 18,
+                height: 45,
+                borderWidth: 3,
+                borderRadius: 50,
+                borderColor: "black",
+              }}
+            >
+              <Text
+                style={{
+                  textTransform: "uppercase",
+                  color: "black",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                }}
+              >
+                RESET
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={styles.text}>
+              By Login in to Campus Buddy App, you confirm that you accept our
+              <Text
+                style={styles.link}
+                onPress={async () => {
+                  await WebBrowser.openAuthSessionAsync(
+                    "https://www.example.com",
+                    "https://www.google.com"
+                  );
+                }}
+              >
+                Terms of Use
+              </Text>{" "}
+              and
+              <Text
+                style={styles.link}
+                onPress={async () => {
+                  await WebBrowser.openAuthSessionAsync(
+                    "https://www.example.com",
+                    "https://www.google.com"
+                  );
+                }}
+              >
+                {" "}
+                Privacy Policy{" "}
+              </Text>{" "}
+            </Text>
+
+            <TouchableOpacity style={styles.SignBtn} onPress={nav}>
+              <Text style={styles.SignText}>Back to sign in</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  mainView: {
-    marginTop: 40,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+  bottomView: {
+    flex: 1.5,
+    backgroundColor: "#fff",
+    bottom: 50,
+    borderTopStartRadius: 60,
+    borderTopEndRadius: 60,
   },
-  topView: {
-    width: "100%",
-    height: "30%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+  TextInput: {
+    width: "90%",
+    borderWidth: 1,
+    borderColor: "black",
+    height: 52,
+    borderRadius: 20,
+    paddingLeft: 5,
+    marginTop: 20,
+    color: "black",
+    textAlign: "center",
   },
-  bottonView: {
-    width: "100%",
-    height: "70%",
-    backgroundColor: "#474749",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-  },
-  heading: {
-    color: "#fff",
-    fontSize: 40,
-    fontWeight: "bold",
-    marginLeft: 30,
-    marginTop: 60,
-  },
+
   formView: {
     width: "100%",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: 40,
+    marginTop: 10,
   },
-  TextInput: {
-    width: "90%",
-    borderWidth: 1,
-    borderColor: "#fff",
-    height: 52,
-    borderRadius: 10,
-    paddingLeft: 5,
-    marginTop: 20,
-    color: "#fff",
+  forgot: {
+    width: "100%",
+    display: "flex",
+    alignItems: "flex-end",
+    marginTop: 10,
+    marginRight: 34,
   },
   button: {
     width: "90%",
-    color: "#000",
+    color: "black",
     height: 52,
-    backgroundColor: "#fff",
+    backgroundColor: "black",
     borderRadius: 10,
-    marginTop: 20,
+    marginTop: 60,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
+
+  SignText: {
+    color: "#5d57ff",
+  },
   buttonText: {
     fontWeight: "bold",
     fontSize: 18,
+    color: "white",
   },
-  SignText: {
-    color: "gray",
+  tinyLogo: {
+    width: 150,
+    height: 150,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: 26,
+  },
+  link: {
+    color: "#9075E3",
   },
   SignBtn: {
     width: "100%",
@@ -135,11 +220,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
-  forgot: {
-    width: "100%",
-    display: "flex",
-    alignItems: "flex-end",
-    marginTop: 20,
-    marginRight: 34,
+  SignText: {
+    color: "gray",
   },
 });

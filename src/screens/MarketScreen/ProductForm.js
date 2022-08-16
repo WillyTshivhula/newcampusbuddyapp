@@ -20,15 +20,19 @@ import { COLOURS, Items } from "../../../components/database/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { NavigationContainer } from "@react-navigation/native";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context"; //
-import Toast from "react-native-toast-message";
+import { db, auth, storage } from "../../../firebaseSdk";
 import * as ImagePicker from "expo-image-picker";
+<<<<<<< HEAD
 import { firebase } from "../../../config2";
 import mime from "mime";
+=======
+
+>>>>>>> 977f87f (market)
 
 import baseURL from "../../../assets/common/baseUrl";
 import axios from "axios";
+import { EmailAuthCredential } from "firebase/auth";
 
 const ProductForm = (props) => {
   const todoRef = firebase.firestore().collection("newData");
@@ -41,6 +45,7 @@ const ProductForm = (props) => {
   const [value, setvalue] = useState("");
   const [error, setError] = useState("");
   const [item, setItem] = useState(null);
+  const [email, setEmail] = useState("");
   //useState for image picker
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
   const [image, setImage] = useState(null);
@@ -98,7 +103,11 @@ const ProductForm = (props) => {
       const datas = {
         title: title,
         price: price,
+<<<<<<< HEAD
         //image: image,
+=======
+        email: auth.currentUser.email,
+>>>>>>> 977f87f (market)
         condition: condition,
         description: description,
       };
@@ -122,6 +131,7 @@ const ProductForm = (props) => {
             ]);
           });
       } else {
+<<<<<<< HEAD
 
         //add to firebase
         //get the timestamp
@@ -145,6 +155,9 @@ const ProductForm = (props) => {
           });
         //
         //add to MySQL
+=======
+        console.log(data);
+>>>>>>> 977f87f (market)
         axios
           .post(`${baseURL}/market/addNew`, datas)
           .then((res) => {
@@ -187,7 +200,7 @@ const ProductForm = (props) => {
           paddingBottom: 16,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => props.navigation.navigate("Market")}>
           <MaterialCommunityIcons
             name="chevron-left"
             style={{
@@ -234,7 +247,7 @@ const ProductForm = (props) => {
             </TouchableOpacity>
           ) : (
             <></>
-          )}
+          )} 
 
           <TextInput
             style={styles.TextInput}

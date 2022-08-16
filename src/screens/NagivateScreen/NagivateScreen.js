@@ -3,8 +3,13 @@ import {
     View,
     Text,
   } from "react-native";
+  import Header from "../Component/Header";
+
 export default function NagivateScreen() {
   return (
-    <Text>NagivateScreen</Text>
-  )
+    <View>
+      <Header headerText="Chatroom" />
+      <Text>Navigator</Text>
+    </View>
+  );
 }

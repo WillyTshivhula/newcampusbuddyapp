@@ -17,8 +17,8 @@ import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFocusEffect } from "@react-navigation/native";
 import ListItem from "../MarketScreen/ListItem";
-import {  useSafeAreaInsets } from "react-native-safe-area-context"; //
-
+import { useSafeAreaInsets } from "react-native-safe-area-context"; //
+import { db, auth, storage } from "../../../firebaseSdk";
 import axios from "axios";
 import baseURL from "../../../assets/common/baseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -81,20 +81,21 @@ const ManageListings = (props) => {
         })
         .catch((error) => console.log(error));
 
-      axios.get(`${baseURL}/market/all`)
-      .then((res) => {
-        setProductList(res.data);
-        setProductFilter(res.data);
-        setLoading(false);
-      })
+      axios
+        .get(`${baseURL}/market/findUserItem/${auth.currentUser.email}`)
+        .then((res) => {
+          setProductList(res.data);
+          setProductFilter(res.data);
+          setLoading(false);
+        });
 
       return () => {
         setProductList();
         setProductFilter();
         setLoading(true);
-      }
+      };
     }, [])
-  )
+  );
 
   //searchBar function
   const searchProduct = (text) => {
@@ -113,8 +114,8 @@ const ManageListings = (props) => {
     axios
       .delete(`${baseURL}/market/remove/${id}`)
       .then((res) => {
-        const products = productFilter.filter((item) => item.id !== id)
-        setProductFilter(products)
+        const products = productFilter.filter((item) => item.id !== id);
+        setProductFilter(products);
       })
       .catch((error) => console.log(error));
   };
@@ -134,7 +135,6 @@ const ManageListings = (props) => {
           height: "20%",
           position: "static",
           backgroundColor: "#3F569C",
-          
         }}
       >
         <View
@@ -148,7 +148,7 @@ const ManageListings = (props) => {
             paddingBottom: 16,
           }}
         >
-          <TouchableOpacity onPress={() => props.navigation.navigate("Home")}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("Market")}>
             <MaterialCommunityIcons
               name="chevron-left"
               style={{

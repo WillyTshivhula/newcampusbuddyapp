@@ -13,13 +13,14 @@ import {
 import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import Icon from "react-native-vector-icons/FontAwesome";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context"; //
 
 import baseURL from "../../../assets/common/baseUrl";
 import axios from "axios";
 
 import Searchbar from "../../../components/SearchBar";
+<<<<<<< HEAD
 import SearchedProducts from "./SearchedProducts";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -27,6 +28,13 @@ import { firebase } from "../../../config2";
 
 const Home = ({ navigation }, props) => {
    const insets = useSafeAreaInsets();
+=======
+import Header from "../Component/Header";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+export default function MarketScreen({ navigation }) {
+  const insets = useSafeAreaInsets();
+>>>>>>> 977f87f (market)
   const [products, setProducts] = useState([]);
   
   const [productsFiltered, setProductsFiltered] = useState([]);
@@ -155,19 +163,13 @@ const Home = ({ navigation }, props) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/*Header (Campus Market title)*/}
-      <View
-        style={{
-          height: "20%",
-          position: "static",
-          backgroundColor: "#3F569C",
-          borderBottomRadius: 10,
-          marginTop: insets.top,
-        }}
-      >
+    <KeyboardAwareScrollView>
+      {/* <Header headerText="Market" /> */}
+      <View style={styles.container}>
+        {/*Header (Campus Market title)*/}
         <View
           style={{
+<<<<<<< HEAD
             marginBottom: 10,
             padding: 16,
             flexDirection: "row",
@@ -224,6 +226,104 @@ const Home = ({ navigation }, props) => {
       {focus == true ? (
         <SearchedProducts productsFiltered={productsFiltered} />
       ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/*Button Container*/}
+          <View style={styles.buttonContainer1}>
+            <TouchableOpacity
+              style={styles.btnAddProduct}
+              onPress={() => navigation.navigate("ProductForm")}
+            >
+              {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
+              <Entypo
+                name="shopping-bag"
+                style={{
+                  fontSize: 18,
+                  color: COLOURS.backgroundMedium,
+                  padding: 12,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: COLOURS.backgroundLight,
+                }}
+              >
+                <Text>Sell</Text>
+              </Entypo>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnAddProduct}
+              onPress={() => navigation.navigate("MyListings")}
+            >
+              {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
+              <MaterialCommunityIcons
+                //name="cart"
+                style={{
+                  fontSize: 18,
+                  color: COLOURS.backgroundMedium,
+                  padding: 12,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: COLOURS.backgroundLight,
+                }}
+              >
+                <Text>Products</Text>
+              </MaterialCommunityIcons>
+            </TouchableOpacity>
+          </View>
+
+          {/*Button Container ends here*/}
+
+          {/*products card starts here*/}
+          <View
+            style={{
+              padding: 16,
+=======
+            height: 160,
+            position: "static",
+            backgroundColor: "#3F569C",
+            borderBottomRadius: 10,
+            marginTop: insets.top,
+          }}
+        >
+          <View
+            style={{
+              marginBottom: 10,
+              padding: 16,
+              flexDirection: "row",
+              justifyContent: "space-between",
+>>>>>>> 977f87f (market)
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 24,
+                color: COLOURS.white,
+                fontWeight: "500",
+              }}
+            >
+              Marketplace
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ProductForm")}
+            >
+              {/*Entypo generates the market icon (in the below codes)*/}
+              <Entypo
+                name="shopping-bag"
+                style={{
+                  fontSize: 18,
+                  color: "white",
+                  padding: 12,
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: COLOURS.backgroundLight,
+                  backgroundColor: COLOURS.backgroundDark.Light,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          {/* Call Searchbar component*/}
+          <Searchbar value={value} updateSearch={updateSearch} />
+        </View>
+
+        <StatusBar backgroundColor={COLOURS.white} barStyle="dark-content" />
         <ScrollView showsVerticalScrollIndicator={false}>
           {/*Button Container*/}
           <View style={styles.buttonContainer1}>
@@ -332,12 +432,15 @@ const Home = ({ navigation }, props) => {
             </View>
           </View>
         </ScrollView>
+<<<<<<< HEAD
       )}
     </SafeAreaView>
+=======
+      </View>
+    </KeyboardAwareScrollView>
+>>>>>>> 977f87f (market)
   );
-};
-
-export default Home;
+}
 
 const styles = StyleSheet.create({
   container: {
