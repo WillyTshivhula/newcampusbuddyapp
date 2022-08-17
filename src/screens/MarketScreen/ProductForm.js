@@ -152,7 +152,7 @@ const ProductForm = (props) => {
   };
 
   return (
-    <View
+    <KeyboardAvoidingView
       style={{
         backgroundColor: "#3F569C",
         flex: 1,
@@ -197,7 +197,7 @@ const ProductForm = (props) => {
         </Text>
       </View>
 
-      <View
+      <ScrollView
         style={{
           flex: 1,
 
@@ -207,7 +207,7 @@ const ProductForm = (props) => {
         {loading ?<View style={styles.spinner}>
             <ActivityIndicator size="large" color="blue" />
           </View> : 
-        <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.container}>
         
         {image && (
             <Image
@@ -230,7 +230,7 @@ const ProductForm = (props) => {
 
           </View>
           
-        </ImageBackground>  :""}
+        </ImageBackground>  :null}
         
         <View style={styles.bottomView}>
         <View style={styles.formView}>
@@ -282,9 +282,12 @@ const ProductForm = (props) => {
 
         </View>
         </View>
-        </KeyboardAvoidingView>}
-      </View>
-    </View>
+        </View>}
+
+        
+
+    </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -309,7 +312,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     // bottom:50,
     position:"relative",
-    top:"-30px",
+    top:-30,
     borderTopStartRadius:60,
     borderTopEndRadius:60,
 
