@@ -55,7 +55,8 @@ const ProductInfo = ({ route, navigation }) => {
         }}
       >
         <Image
-          source={item}
+          //source={item}
+          source={product.image}
           style={{
             width: "100%",
             height: "100%",
@@ -88,7 +89,7 @@ const ProductInfo = ({ route, navigation }) => {
             borderBottomLeftRadius: 20,
             position: "relative",
             justifyContent: "center",
-            alignItems: "center",
+            // alignItems: "center",
             marginBottom: 4,
           }}
         >

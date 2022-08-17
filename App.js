@@ -10,11 +10,11 @@ import ForgotPassWordScreen from './src/screens/ForgotPassWordScreen/ForgotPassW
 import Tabs from './src/screens/Tabs/Tabs'
 import MarketScreen from './src/screens/MarketScreen/MarketScreen';
 import ProductInfo from './src/screens/MarketScreen/ProductInfo';
-import Listing from './src/screens/MarketScreen/Listing';
 import ManageListings from './src/screens/MarketScreen/ManageListings';
 import  ListItem from './src/screens/MarketScreen/ListItem'
 
 import ProductForm from './src/screens/MarketScreen/ProductForm';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -22,13 +22,12 @@ export default function App() {
   return (
     <NavigationContainer>
     <Stack.Navigator initialRouteName="Home">
-      
+
       <Stack.Screen name="ProductForm" component={ProductForm} options={{headerShown:false}}/>
 
       <Stack.Screen name="Home" component={MarketScreen} options={{headerShown:false}}/>
       <Stack.Screen name="ListItem" component={ListItem} options={{headerShown:false}}/>
       <Stack.Screen name="MyListings" component={ManageListings} options={{headerShown:false}}/>
-      <Stack.Screen name="Listing" component={Listing} options={{headerShown:false}}/>
       <Stack.Screen name="ProductInfo" component={ProductInfo} options={{headerShown:false}}/>
       <Stack.Screen name="SignIn" component={HomeScreen} options={{headerShown:false}}/>
       <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown:false}}/>

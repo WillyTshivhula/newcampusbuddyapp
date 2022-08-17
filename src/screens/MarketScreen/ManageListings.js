@@ -70,6 +70,7 @@ const ManageListings = (props) => {
         //setUsers(users);
         setProductList(users);
         setProductFilter(users);
+        setLoading(false);
       });
 
       /////

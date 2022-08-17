@@ -22,12 +22,16 @@ import axios from "axios";
 import Searchbar from "../../../components/SearchBar";
 import SearchedProducts from "./SearchedProducts";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { firebase } from "../../../config2";
+
 const Home = ({ navigation }, props) => {
    const insets = useSafeAreaInsets();
   const [products, setProducts] = useState([]);
   
   const [productsFiltered, setProductsFiltered] = useState([]);
   const [focus, setFocus] = useState();
+  const todoRef = firebase.firestore().collection("newData");
 
   //SearchBar function
   const [value, setValue] = useState();
@@ -42,6 +46,24 @@ const Home = ({ navigation }, props) => {
     //setProducts(data);
     //setProductsFiltered(data);
     //setFocus(false);
+
+    //get data from firebase
+    todoRef.onSnapshot((querySnapshot) => {
+      const users = [];
+      querySnapshot.forEach((doc) => {
+        const { image /*text*/ } = doc.data();
+        users.push({
+          id: doc.id,
+          //heading,
+          image,
+          //text,
+        });
+      });
+      //setUsers(users);
+      setProducts(users);
+      setProductsFiltered(users);
+      setFocus(false);
+    });
 
     axios
       .get(`${baseURL}/market/all`)
