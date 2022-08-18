@@ -22,7 +22,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 export default function SigninScreen({ navigation }) {
-  const [email, setUsername] = useState("lloyd123@mail.com");
+  const [email, setUsername] = useState("Lloyd@mail.com");
   const [password, setPassword] = useState(12345678);
   const [loading, setLoading] = useState(false);
   function nav(value) {

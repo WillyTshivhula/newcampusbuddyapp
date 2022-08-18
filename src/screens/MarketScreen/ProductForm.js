@@ -75,11 +75,14 @@ const ProductForm = (props) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
+      base64:true,
       aspect: [4, 3],
       quality: 1,
     });
 
-    console.log(result);
+    console.log("reul",result.base64);
+    const uploadurl = result.uri.substring(result.uri.lastIndexOf('/') + 1);
+    console.log(uploadurl);
 
     if (!result.cancelled) {
       setImage(result.uri);
@@ -230,7 +233,7 @@ const ProductForm = (props) => {
 
           </View>
           
-        </ImageBackground>  :""}
+        </ImageBackground>  :null}
         
         <View style={styles.bottomView}>
         <View style={styles.formView}>
@@ -309,7 +312,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     // bottom:50,
     position:"relative",
-    top:"-30px",
+    top:-30,
     borderTopStartRadius:60,
     borderTopEndRadius:60,
 

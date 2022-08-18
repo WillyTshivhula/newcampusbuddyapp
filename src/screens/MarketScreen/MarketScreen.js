@@ -82,7 +82,7 @@ export default function MarketScreen({navigation}) {
           }}
         >
           <Image
-            source={data.image}
+            source={data.itemUrl}
             style={{
               width: "80%",
               height: "80%",
