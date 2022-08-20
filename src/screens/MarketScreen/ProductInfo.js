@@ -15,13 +15,14 @@ import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Card, Title, Paragraph, Appbar } from "react-native-paper";
 
 const ProductInfo = ({ route, navigation }) => {
   const { data } = route.params;
 
   const [product, setProduct] = useState({});
 
-  const width = Dimensions.get("window").width;
+  var { height, width } = Dimensions.get("window");
 
   const scrollX = new Animated.Value(0);
 
@@ -43,28 +44,7 @@ const ProductInfo = ({ route, navigation }) => {
     });
   };
 
-  //product horizontal scroll product card
-  const renderProduct = ({ item, index }) => {
-    return (
-      <View
-        style={{
-          width: width,
-          height: 240,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Image
-          source={item}
-          style={{
-            width: "100%",
-            height: "100%",
-            resizeMode: "contain",
-          }}
-        />
-      </View>
-    );
-  };
+
 
   return (
     <View
@@ -75,94 +55,16 @@ const ProductInfo = ({ route, navigation }) => {
         position: "relative",
       }}
     >
-      <StatusBar
-        backgroundColor={COLOURS.backgroundLight}
-        barStyle="dark-content"
-      />
+      <Appbar.Header>
+          <Appbar.BackAction onPress={() => navigation.navigate("Market")} />
+          <Appbar.Content title={"Product Info"} />
+        </Appbar.Header>
       <ScrollView>
-        <View
-          style={{
-            width: "100%",
-            backgroundColor: COLOURS.backgroundLight,
-            borderBottomRightRadius: 20,
-            borderBottomLeftRadius: 20,
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 4,
-          }}
-        >
-          <View
+      <Image
+            source={{uri:product.itemUrl}}
             style={{
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingTop: 16,
-              paddingLeft: 16,
-            }}
-          >
-            <TouchableOpacity onPress={() => navigation.navigate("Market")}>
-              <Entypo
-                name="chevron-left"
-                style={{
-                  fontSize: 18,
-                  color: COLOURS.backgroundDark,
-                  padding: 12,
-                  backgroundColor: COLOURS.white,
-                  borderRadius: 10,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            data={
-              "https://pixabay.com/photos/clock-money-growth-grow-time-2696234/"
-            }
-            horizontal
-            renderItem={renderProduct}
-            showsHorizontalScrollIndicator={false}
-            decelerationRate={0.8}
-            snapToInterval={width}
-            bounces={false}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              { useNativeDriver: false }
-            )}
-          />
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: 16,
-              marginTop: 32,
-            }}
-          >
-            {product.productImageList
-              ? product.productImageList.map((data, index) => {
-                  let opacity = position.interpolate({
-                    inputRange: [index - 1, index, index + 1],
-                    outputRange: [0.2, 1, 0.2],
-                    extrapolate: "clamp",
-                  });
-                  return (
-                    <Animated.View
-                      key={index}
-                      style={{
-                        width: "16%",
-                        height: 2.4,
-                        backgroundColor: COLOURS.black,
-                        opacity,
-                        marginHorizontal: 4,
-                        borderRadius: 100,
-                      }}
-                    ></Animated.View>
-                  );
-                })
-              : null}
-          </View>
-        </View>
+              height:Dimensions.get('window').height/2.3,
+             }}/>
         <View
           style={{
             paddingHorizontal: 16,

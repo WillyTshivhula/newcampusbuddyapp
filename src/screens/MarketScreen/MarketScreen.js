@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useCallback} from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -7,8 +7,10 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
-  Image,
+  Image,Dimensions
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+
 import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -21,14 +23,14 @@ import axios from "axios";
 import Searchbar from "../../../components/SearchBar";
 import Header from "../Component/Header";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-
+var { height, width } = Dimensions.get("window");
 
 export default function MarketScreen({navigation}) {
   const insets = useSafeAreaInsets();
   const [products, setProducts] = useState([]);
   const [accessory, setAccessory] = useState([]);
   const [books, setBooks] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   //SearchBar function
   const [value, setValue] = useState();
   function updateSearch(value) {
@@ -38,22 +40,20 @@ export default function MarketScreen({navigation}) {
 
   //Async Storage starts
   //get called on scren loads
-  useEffect(() => {
-    axios
-      .get(`${baseURL}/market/all`)
-      .then((res) => {
-        setProducts(res.data);
-        setAccessory(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    return () => {
-      setProducts([]);
-      setAccessory([]);
-    };
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      axios
+        .get(`${baseURL}/market/all`)
+        .then((res) => {
+          setProducts(res.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },[])
+  )
+ 
 
   const ProductCard = ({ data }) => {
     return (
@@ -82,7 +82,7 @@ export default function MarketScreen({navigation}) {
           }}
         >
           <Image
-            source={data.itemUrl}
+            source={{uri:data.itemUrl}}
             style={{
               width: "80%",
               height: "80%",
@@ -113,53 +113,8 @@ export default function MarketScreen({navigation}) {
       {/* <Header headerText="Market" /> */}
       <View style={styles.container}>
       {/*Header (Campus Market title)*/}
-      <View
-        style={{
-          height: 160,
-          position: "static",
-          backgroundColor: "#3F569C",
-          borderBottomRadius: 10,
-          marginTop: insets.top,
-        }}
-      >
-        <View
-          style={{
-            marginBottom: 10,
-            padding: 16,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 24,
-              color: COLOURS.white,
-              fontWeight: "500",
-            }}
-          >
-            Marketplace
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("ProductForm")}>
-            {/*Entypo generates the market icon (in the below codes)*/}
-            <Entypo
-              name="shopping-bag"
-              style={{
-                fontSize: 18,
-                color: "white",
-                padding: 12,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: COLOURS.backgroundLight,
-                backgroundColor: COLOURS.backgroundDark.Light,
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* Call Searchbar component*/}
-        <Searchbar value={value} updateSearch={updateSearch} />
-      </View>
-
-      <StatusBar backgroundColor={COLOURS.white} barStyle="dark-content" />
+      <Header headerText="Marketplace" />
+   
       <ScrollView showsVerticalScrollIndicator={false}>
 
         {/*Button Container*/}
@@ -265,9 +220,18 @@ export default function MarketScreen({navigation}) {
               justifyContent: "space-around",
             }}
           >
-            {products.map((data) => {
+            {loading ? (
+              <View style={styles.spinner}>
+              <ActivityIndicator size="large" color="blue" />
+            </View>
+            ):(
+              <>
+              {products.map((data) => {
               return <ProductCard data={data} key={data.id} />;
             })}
+              </>
+            )}
+            
           </View>
         </View>
       </ScrollView>
@@ -307,5 +271,10 @@ const styles = StyleSheet.create({
     //background: transparent,
     //backgroundColor: COLOURS.backgroundLight,
     //width: 100,
+  },
+  spinner: {
+    height: height / 2,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

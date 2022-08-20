@@ -10,7 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Dimensions,
-  TouchableOpacity,
+  TouchableOpacity,KeyboardAvoidingView
 } from "react-native";
 import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -22,6 +22,7 @@ import { db, auth, storage } from "../../../firebaseSdk";
 import axios from "axios";
 import baseURL from "../../../assets/common/baseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Paragraph, Dialog, Portal, Appbar } from "react-native-paper";
 
 var { height, width } = Dimensions.get("window");
 
@@ -100,88 +101,33 @@ const ManageListings = (props) => {
   };
 
   return (
-    <SafeAreaView
+    <View
       style={{
         backgroundColor: COLOURS.white,
         flex: 1,
         width: "100%",
         height: "100%",
-        marginTop: insets.top,
+        
       }}
     >
-      <View
-        style={{
-          height: "20%",
-          position: "static",
-          backgroundColor: "#3F569C",
-          
-        }}
-      >
-        <View
-          style={{
-            width: "100%",
-            flexDirection: "row",
-            paddingTop: 16,
-            paddingHorizontal: 16,
-
-            alignItems: "center",
-            paddingBottom: 16,
-          }}
-        >
-          <TouchableOpacity onPress={() => props.navigation.navigate("Market")}>
-            <MaterialCommunityIcons
-              name="chevron-left"
-              style={{
-                fontSize: 18,
-                color: COLOURS.backgroundDark,
-                padding: 12,
-                backgroundColor: COLOURS.backgroundLight,
-                borderRadius: 12,
-              }}
-            />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: 24,
-              color: COLOURS.white,
-              fontWeight: "500",
-              marginLeft: 30,
-            }}
-          >
-            Products
-          </Text>
-        </View>
-
-        {/*Search bar */}
-        <View style={[styles.container1]}>
-          <View style={styles.searchContainer}>
-            <View style={styles.vwSearch}>
-              <Image
-                style={styles.icSearch}
-                source={require("../../../assets/images/ic_search.png")}
-              />
-            </View>
-            <TextInput
-              placeholder="Search"
-              style={styles.textInput}
-              onChangeText={(text) => searchProduct(text)}
-            />
-          </View>
-        </View>
-      </View>
-
-      {/*Button Container*/}
+        <Appbar.Header>
+        <Appbar.BackAction
+          onPress={() => props.navigation.navigate("Market")}
+        />
+        <Appbar.Content title={"Your Listing"} />
+      </Appbar.Header>
+     
       <View style={styles.buttonContainer1}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.button}
           onPress={() => props.navigation.navigate("ProductForm")}
         >
           <Text style={styles.buttonText}>Add Product</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/*Display products uploaded by seller */}
-      <ScrollView>
+      <View>
         {loading ? (
           <View style={styles.spinner}>
             <ActivityIndicator size="large" color="blue" />
@@ -201,9 +147,9 @@ const ManageListings = (props) => {
             keyExtractor={(item) => item.id}
           />
         )}
-      </ScrollView>
+      </View>
       {/*//////////////////////////////// */}
-    </SafeAreaView>
+    </View>
   );
 };
 
