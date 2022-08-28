@@ -7,7 +7,7 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
-  Image,Dimensions
+  Image,Dimensions,ActivityIndicator
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 

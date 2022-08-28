@@ -13,7 +13,7 @@ import {
 import Logo from "../../../assets/images/Logo_1.jpg";
 import axios from "axios";
 import { auth, db } from "../../../firebaseSdk";
-import { setDoc, doc, Timestamp } from "firebase/firestore";
+import { addDoc,setDoc, doc, Timestamp } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 

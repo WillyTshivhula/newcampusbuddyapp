@@ -20,11 +20,13 @@ import { updateDoc, doc } from "firebase/firestore";
 import {auth, db } from "../../../firebaseSdk";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import {AppContext} from '../service'
 
 export default function SigninScreen({ navigation }) {
   const [email, setUsername] = useState("Lloyd@mail.com");
   const [password, setPassword] = useState(12345678);
   const [loading, setLoading] = useState(false);
+  const [details,setDetails] = useState();
   function nav(value) {
     navigation.navigate(value);
   }
@@ -52,6 +54,7 @@ export default function SigninScreen({ navigation }) {
       .then((data) => {
         setLoading(false);
         nav("Tabs");
+        setDetails(data.data.body)
         console.log(data.data.body);
       })
       .catch((err) => {
@@ -65,7 +68,7 @@ export default function SigninScreen({ navigation }) {
       style={{ flex: 1, backgroundColor: "#ffffff" }}
     >
       {/*Brand View*/}
-
+    <AppContext.Provider  value={details}>
       <ImageBackground
         source={require("../../../assets/images/bg1.jpg")}
         style={{
@@ -189,6 +192,7 @@ export default function SigninScreen({ navigation }) {
           </View>
         </View>
       </View>
+      </AppContext.Provider>
     </KeyboardAwareScrollView>
   );
 }

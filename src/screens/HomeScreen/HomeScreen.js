@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -6,22 +6,56 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  Alert,
+  Modal,
+  Pressable,
+  TextInput,
+  ActivityIndicator,
 } from "react-native";
-import { Button, Modal } from "react-native-paper";
+import { Button, Snackbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../Component/Header";
 const { width, height } = Dimensions.get("window");
 import { db, auth, storage } from "../../../firebaseSdk";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import axios from "axios";
+import { AppContext } from "../service";
 
-import service from "../service";
 export default function HomeScreen() {
-  let data1 = service.getName();
-  let data2 = service.getCourse();
-  let data3 = service.getEmail();
-
+  // const { details } = useContext(AppContext);
+  const [modalVisible, setModalVisible] = useState(false);
   const [open, setOpen] = useState(false);
-
+  const [visible, setVisible] = useState(true);
+  const [recipient, setRecipient] = useState("campusbudd.uj@outlook.com");
+  const [msgbody, setMsgbody] = useState("");
+  const [subject, setSubject] = useState("");
+  const onToggleSnackBar = () => setVisible(!visible);
+  const [loading, setLoading] = useState(false);
+  const onDismissSnackBar = () => setVisible(false);
+  function sendmail() {
+    const data = {
+      recipient: recipient,
+      msgBody: msgbody,
+      subject: subject,
+    };
+    setLoading(true);
+    axios
+      .post(
+        "http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/email/sendMail",
+        data
+      )
+      .then((data) => {
+        setModalVisible(!modalVisible);
+        setLoading(false);
+        Alert.alert("Success", "Incident submitted...", [{ text: "Ok" }]);
+      })
+      .catch((err) => {
+        Alert.alert("Error", "Something went wrong, Please try again", [
+          { text: "Ok" },
+        ]);
+        setLoading(false);
+      });
+  }
   return (
     <KeyboardAwareScrollView>
       <Header headerText="Welcome !" />
@@ -53,9 +87,56 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
         <View style={styles.textView}>
-          <Text style={styles.itemTitle}>John Doe </Text>
+          <Text style={styles.itemTitle}>ty </Text>
           <Text style={styles.itemDescription}>{auth.currentUser.email}</Text>
         </View>
+      </View>
+
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Report Incident!</Text>
+              <TextInput
+                style={styles.TextInput}
+                placeholder={"Subject"}
+                placeholderTextColor={"black"}
+                onChangeText={(subject) => setSubject(subject)}
+              />
+              <TextInput
+                multiline={true}
+                style={styles.TextInput}
+                placeholder={"Details"}
+                placeholderTextColor={"black"}
+                onChangeText={(msgbody) => setMsgbody(msgbody)}
+              />
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={sendmail}
+              >
+                {loading ? (
+                  <ActivityIndicator size="large" color="blue" />
+                ) : (
+                  <Text style={styles.textStyle}>Submit </Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+        <Pressable
+          style={[styles.button, styles.buttonOpen]}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.textStyle}>Report Incident</Text>
+        </Pressable>
       </View>
     </KeyboardAwareScrollView>
   );
@@ -134,5 +215,68 @@ const styles = StyleSheet.create({
   SignText2: {
     color: "white",
     marginLeft: 250,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    width: "95%",
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "left",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    width: "90%",
+    color: "#000",
+    height: 52,
+    backgroundColor: "#9075E3",
+    borderRadius: 10,
+    marginTop: 20,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonOpen: {
+    backgroundColor: "#9075E3",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  TextInput: {
+    width: "90%",
+    borderWidth: 1,
+    borderColor: "black",
+    height: 52,
+    borderRadius: 10,
+    paddingLeft: 5,
+    marginTop: 20,
+    color: "black",
+    // textAlign : "center",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
   },
 });

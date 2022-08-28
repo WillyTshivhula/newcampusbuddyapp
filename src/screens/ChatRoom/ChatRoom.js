@@ -52,10 +52,11 @@ export default function ChatRoom({ route }) {
           return el.email.toLowerCase() === canchat.username.toLowerCase() ;
         });
         setUsers(newArray);
-        console.log(newArray);
+        setCanChat(undefined)
+        console.log("test",newArray);
       } else {
         setUsers(users);
-        console.log(canchat);
+        console.log(canchat,users);
       }
 
       //N.B pass the email from market via params to this component.

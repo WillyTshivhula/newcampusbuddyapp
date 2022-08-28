@@ -13,9 +13,9 @@ export default function Header({headerText}) {
         backgroundColor="#61dafb"
         hidden={true} />
       <View>
-        <Text style={styles.textH}> 
+        {/* <Text style={styles.textH}> 
           {headerText}
-        </Text>
+        </Text> */}
     </View>
     </View>
   )
