@@ -20,7 +20,7 @@ import { db, auth, storage } from "../../../firebaseSdk";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axios from "axios";
 import { AppContext } from "../service";
-
+import Icon from "react-native-vector-icons/FontAwesome";
 export default function HomeScreen() {
   // const { details } = useContext(AppContext);
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,9 +29,17 @@ export default function HomeScreen() {
   const [recipient, setRecipient] = useState("campusbudd.uj@outlook.com");
   const [msgbody, setMsgbody] = useState("");
   const [subject, setSubject] = useState("");
-  const onToggleSnackBar = () => setVisible(!visible);
   const [loading, setLoading] = useState(false);
-  const onDismissSnackBar = () => setVisible(false);
+  const [profile,setProfile] = useState([]);
+  
+
+  useEffect(() => {
+    axios.get(`http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/profile/details/${ auth.currentUser.email}`)
+    .then((res) => {
+      setProfile(res.data)
+      console.log(res.data)
+    }).catch((err) => console.log(err))
+  },[]); 
   function sendmail() {
     const data = {
       recipient: recipient,
@@ -87,8 +95,9 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
         <View style={styles.textView}>
-          <Text style={styles.itemTitle}>ty </Text>
-          <Text style={styles.itemDescription}>{auth.currentUser.email}</Text>
+          <Text style={styles.itemTitle}>{profile[0]?.username} </Text>
+          <Text style={styles.itemDescription}>Email : {profile[0]?.email}</Text>
+          <Text style={styles.itemDescription}>Course : {profile[0]?.course}</Text>
         </View>
       </View>
 
@@ -105,6 +114,20 @@ export default function HomeScreen() {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Report Incident!</Text>
+              <TouchableOpacity
+              underlayColor="#E8E8E8"
+              onPress={() => {
+                setModalVisible(false);
+              }}
+              style={{
+                alignSelf: "flex-end",
+                position: "absolute",
+                top: 5,
+                right: 10,
+              }}
+            >
+              <Icon name="close" size={20} />
+            </TouchableOpacity>
               <TextInput
                 style={styles.TextInput}
                 placeholder={"Subject"}

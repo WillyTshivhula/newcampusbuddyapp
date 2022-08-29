@@ -10,49 +10,32 @@ import {
   ScrollView,
   ActivityIndicator,
   Dimensions,
-  TouchableOpacity,KeyboardAvoidingView
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Modal,
 } from "react-native";
 import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFocusEffect } from "@react-navigation/native";
 import ListItem from "../MarketScreen/ListItem";
-import {  useSafeAreaInsets } from "react-native-safe-area-context"; //
+import { useSafeAreaInsets } from "react-native-safe-area-context"; //
 import { db, auth, storage } from "../../../firebaseSdk";
 import axios from "axios";
 import baseURL from "../../../assets/common/baseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Paragraph, Dialog, Portal, Appbar } from "react-native-paper";
-
+import { Avatar } from 'react-native-paper';
 var { height, width } = Dimensions.get("window");
-
-const ListHeader = () => {
-  return (
-    <View elevation={1} style={styles.listHeader}>
-      <View style={styles.headerItem}></View>
-      <View style={styles.headerItem}>
-        <Text style={{ fontWeight: "700" }}>Brand</Text>
-      </View>
-      <View style={styles.headerItem}>
-        <Text style={{ fontWeight: "700" }}>Name</Text>
-      </View>
-      {/*<View style={styles.headerItem}>
-          <Text style={{fontWeight: '700'}}>Category</Text>
-        </View> */}
-      <View style={styles.headerItem}>
-        <Text style={{ fontWeight: "700" }}>Price</Text>
-      </View>
-    </View>
-  );
-};
-
+import Icon from "react-native-vector-icons/FontAwesome";
 const ManageListings = (props) => {
   const insets = useSafeAreaInsets();
   const [productList, setProductList] = useState();
   const [productFilter, setProductFilter] = useState();
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState();
-
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   useFocusEffect(
     useCallback(() => {
       // Get Token
@@ -62,20 +45,21 @@ const ManageListings = (props) => {
         })
         .catch((error) => console.log(error));
 
-      axios.get(`${baseURL}/market/findUserItem/${ auth.currentUser.email}`)
-      .then((res) => {
-        setProductList(res.data);
-        setProductFilter(res.data);
-        setLoading(false);
-      })
+      axios
+        .get(`${baseURL}/market/findUserItem/${auth.currentUser.email}`)
+        .then((res) => {
+          setProductList(res.data);
+          setProductFilter(res.data);
+          setLoading(false);
+        });
 
       return () => {
         setProductList();
         setProductFilter();
         setLoading(true);
-      }
+      };
     }, [])
-  )
+  );
 
   //searchBar function
   const searchProduct = (text) => {
@@ -94,12 +78,34 @@ const ManageListings = (props) => {
     axios
       .delete(`${baseURL}/market/remove/${id}`)
       .then((res) => {
-        const products = productFilter.filter((item) => item.id !== id)
-        setProductFilter(products)
+        const products = productFilter.filter((item) => item.id !== id);
+        setProductFilter(products);
       })
       .catch((error) => console.log(error));
   };
 
+  const Item = ({ title, itemUrl, index ,onPress}) => (
+    <TouchableOpacity
+      style={[
+        styles.item,
+        { backgroundColor: index % 2 == 0 ? "white" : "gainsboro" },
+      ]}
+      onPress={onPress}
+    >
+      <Avatar.Image
+        source={{ uri: itemUrl }}
+        size={60}
+      />
+
+      <Text style={styles.title}>{title}</Text>
+    </TouchableOpacity>
+  );
+
+  const renderItem = ({ item }) => (
+    <Item title={item.title} itemUrl={item.itemUrl} index={item.index} onPress={() => {
+      setSelectedId(item)
+      setModalVisible(true)}}/>
+  );
   return (
     <View
       style={{
@@ -107,26 +113,17 @@ const ManageListings = (props) => {
         flex: 1,
         width: "100%",
         height: "100%",
-        
       }}
     >
-        <Appbar.Header>
+      <Appbar.Header>
         <Appbar.BackAction
           onPress={() => props.navigation.navigate("Market")}
         />
         <Appbar.Content title={"Your Listing"} />
       </Appbar.Header>
-     
-      <View style={styles.buttonContainer1}>
-        {/* <TouchableOpacity
-          style={styles.button}
-          onPress={() => props.navigation.navigate("ProductForm")}
-        >
-          <Text style={styles.buttonText}>Add Product</Text>
-        </TouchableOpacity> */}
-      </View>
 
-      {/*Display products uploaded by seller */}
+      <View style={styles.buttonContainer1}></View>
+
       <View>
         {loading ? (
           <View style={styles.spinner}>
@@ -135,20 +132,64 @@ const ManageListings = (props) => {
         ) : (
           <FlatList
             data={productFilter}
-            ListHeaderComponent={ListHeader}
-            renderItem={({ item, index }) => (
-              <ListItem
-                {...item}
-                navigation={props.navigation}
-                index={index}
-                delete={deleteProduct}
-              />
-            )}
+            // ListHeaderComponent={ListHeader}
+            // renderItem={({ item, index }) => (
+            //   <ListItem
+            //     {...item}
+            //     navigation={props.navigation}
+            //     index={index}
+            //     delete={deleteProduct}
+            //   />
+            // )}
+            renderItem={renderItem}
             keyExtractor={(item) => item.id}
+            extraData={selectedId}
           />
         )}
       </View>
       {/*//////////////////////////////// */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              underlayColor="#E8E8E8"
+              onPress={() => {
+                setModalVisible(false);
+              }}
+              style={{
+                alignSelf: "flex-end",
+                position: "absolute",
+                top: 5,
+                right: 10,
+              }}
+            >
+              <Icon name="close" size={20} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnEdit}
+              onPress={() => [
+                props.navigation.navigate("ProductForm", { item: selectedId }),
+                setModalVisible(false),
+              ]}
+            >
+              <Text style={styles.textStyle}>Edit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btnDelete}
+               onPress={() => [deleteProduct(selectedId.id), setModalVisible(false)]}
+            >
+              <Text style={styles.textStyle}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -156,6 +197,20 @@ const ManageListings = (props) => {
 export default ManageListings;
 
 const styles = StyleSheet.create({
+  item: {
+    backgroundColor: "#f9c2ff",
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    flexDirection: "row",
+  },
+  title: {
+    fontSize: 24,
+    flex: 5,
+    fontWeight: "600",
+    marginTop:15,
+    marginLeft:10
+  },
   container: {
     backgroundColor: COLOURS.backgroundLight,
     flex: 1,
@@ -180,7 +235,51 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "white",
   },
-
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  btnEdit: {
+    flexDirection: "row",
+    borderRadius: 3,
+    padding: 10,
+    margin: 5,
+    justifyContent: "center",
+    //background: transparent,
+    backgroundColor: "#62b1f6",
+    width: 100,
+  },
+  btnDelete: {
+    flexDirection: "row",
+    borderRadius: 3,
+    padding: 10,
+    margin: 5,
+    justifyContent: "center",
+    //background: transparent,
+    width: 100,
+    backgroundColor: "#f40105",
+  },
   listHeader: {
     flexDirection: "row",
     padding: 5,

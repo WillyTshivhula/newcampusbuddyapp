@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { db, auth, storage } from "../../../firebaseSdk";
-import { View, Text } from "react-native";
+import { View, Text ,ActivityIndicator} from "react-native";
 import Users from "../Component/Users";
 import { GiftedChat } from "react-native-gifted-chat";
 import MessageForm from "../Component/MessageForm";
@@ -34,7 +34,7 @@ export default function ChatRoom({ route }) {
   const [hidelist, setHidelist] = useState(false);
   const [canchat, setCanChat] = useState(route.params);
   const user1 = auth.currentUser.uid;
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const usersRef = collection(db, "users");
     // create query object
@@ -53,9 +53,11 @@ export default function ChatRoom({ route }) {
         });
         setUsers(newArray);
         setCanChat(undefined)
+        setLoading(false);
         console.log("test",newArray);
       } else {
         setUsers(users);
+        setLoading(false);
         console.log(canchat,users);
       }
 
@@ -131,8 +133,14 @@ export default function ChatRoom({ route }) {
       ) : (
         <Header headerText="Chatroom" />
       )}
-
-      {hidelist ? null : (
+  {
+    loading ? (
+     
+    <ActivityIndicator size="large" color="blue" />
+    
+    ):(
+      <View>
+    {hidelist ? null : (
         <View>
           {users.map((user) => (
             <Users
@@ -145,6 +153,10 @@ export default function ChatRoom({ route }) {
           ))}
         </View>
       )}
+      </View>
+    )
+  }
+  
 
       {hidelist ? (
         <View>
