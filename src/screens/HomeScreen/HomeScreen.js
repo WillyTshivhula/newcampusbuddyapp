@@ -26,7 +26,7 @@ export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
-  const [recipient, setRecipient] = useState("campusbudd.uj@outlook.com");
+  const [recipient, setRecipient] = useState("ndivhotshivhula@gmail.com");
   const [msgbody, setMsgbody] = useState("");
   const [subject, setSubject] = useState("");
   const [loading, setLoading] = useState(false);
