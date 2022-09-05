@@ -1,18 +1,18 @@
-import React from 'react'
-import { Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../HomeScreen/HomeScreen'
-import AlertScreen from '../AlertScreen/AlertScreen'
-import MarketScreen from '../MarketScreen/MarketScreen'
-import NagivateScreen from '../NagivateScreen/NagivateScreen'
-import ChatRoom from '../ChatRoom/ChatRoom'
+import React from "react";
+import { Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeScreen from "../HomeScreen/HomeScreen";
+import AlertScreen from "../AlertScreen/AlertScreen";
+import MarketScreen from "../MarketScreen/MarketScreen";
+import NagivateScreen from "../NagivateScreen/NagivateScreen";
+import ChatRoom from "../ChatRoom/ChatRoom";
 import { MaterialIcons } from "@expo/vector-icons";
-//import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const Tab = createBottomTabNavigator();
-//const Tab = createMaterialBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
+
 export default function Tabs() {
   return (
     <Tab.Navigator

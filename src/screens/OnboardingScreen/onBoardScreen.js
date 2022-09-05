@@ -12,7 +12,7 @@ import {
   StatusBar,
 } from "react-native";
 
-import { COLORS, SIZES, FONTS } from '../../../constants'
+import { COLORS, SIZES, FONTS } from "../../../constants";
 //import CustomButton from '../../../../Authentication/src/components/CustomButton';
 import { LinearGradient } from "expo-linear-gradient";
 

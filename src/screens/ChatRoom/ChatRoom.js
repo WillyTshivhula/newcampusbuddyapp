@@ -16,7 +16,7 @@ import {
 } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { db, auth, storage } from "../../../firebaseSdk";
-import { View, Text } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import Users from "../Component/Users";
 import { GiftedChat } from "react-native-gifted-chat";
 import MessageForm from "../Component/MessageForm";
@@ -34,7 +34,7 @@ export default function ChatRoom({ route }) {
   const [hidelist, setHidelist] = useState(false);
   const [canchat, setCanChat] = useState(route.params);
   const user1 = auth.currentUser.uid;
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const usersRef = collection(db, "users");
     // create query object
@@ -52,10 +52,13 @@ export default function ChatRoom({ route }) {
           return el.email.toLowerCase() === canchat.username.toLowerCase();
         });
         setUsers(newArray);
-        console.log(newArray);
+        setCanChat(undefined);
+        setLoading(false);
+        console.log("test", newArray);
       } else {
         setUsers(users);
-        console.log(canchat);
+        setLoading(false);
+        console.log(canchat, users);
       }
 
       //N.B pass the email from market via params to this component.
@@ -130,18 +133,23 @@ export default function ChatRoom({ route }) {
       ) : (
         <Header headerText="Chatroom" />
       )}
-
-      {hidelist ? null : (
+      {loading ? (
+        <ActivityIndicator size="large" color="blue" />
+      ) : (
         <View>
-          {users.map((user) => (
-            <Users
-              key={user.uid}
-              user={user}
-              selectUser={selectUser}
-              user1={user1}
-              chat={chat}
-            />
-          ))}
+          {hidelist ? null : (
+            <View>
+              {users.map((user) => (
+                <Users
+                  key={user.uid}
+                  user={user}
+                  selectUser={selectUser}
+                  user1={user1}
+                  chat={chat}
+                />
+              ))}
+            </View>
+          )}
         </View>
       )}
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -9,7 +9,11 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
+
 import { COLOURS, Items } from "../../../components/database/Database";
 import Entypo from "react-native-vector-icons/Entypo";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -31,16 +35,23 @@ const Home = ({ navigation }, props) => {
 =======
 import Header from "../Component/Header";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+var { height, width } = Dimensions.get("window");
 
 export default function MarketScreen({ navigation }) {
   const insets = useSafeAreaInsets();
 >>>>>>> 977f87f (market)
   const [products, setProducts] = useState([]);
+<<<<<<< HEAD
   
   const [productsFiltered, setProductsFiltered] = useState([]);
   const [focus, setFocus] = useState();
   const todoRef = firebase.firestore().collection("newData");
 
+=======
+  const [accessory, setAccessory] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+>>>>>>> 99ade3d (market)
   //SearchBar function
   const [value, setValue] = useState();
   function updateSearch(value) {
@@ -50,6 +61,7 @@ export default function MarketScreen({ navigation }) {
 
   //Async Storage starts
   //get called on scren loads
+<<<<<<< HEAD
   useEffect(() => {
     //setProducts(data);
     //setProductsFiltered(data);
@@ -91,6 +103,21 @@ export default function MarketScreen({ navigation }) {
       setAccessory([]);
     };
   }, []);
+=======
+  useFocusEffect(
+    useCallback(() => {
+      axios
+        .get(`${baseURL}/market/all`)
+        .then((res) => {
+          setProducts(res.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }, [])
+  );
+>>>>>>> 99ade3d (market)
 
   //Search gunction
   const searchProduct = (text) => {
@@ -136,7 +163,7 @@ export default function MarketScreen({ navigation }) {
           }}
         >
           <Image
-            source={data.image}
+            source={{ uri: data.itemUrl }}
             style={{
               width: "80%",
               height: "80%",
@@ -167,6 +194,7 @@ export default function MarketScreen({ navigation }) {
       {/* <Header headerText="Market" /> */}
       <View style={styles.container}>
         {/*Header (Campus Market title)*/}
+<<<<<<< HEAD
         <View
           style={{
 <<<<<<< HEAD
@@ -322,8 +350,10 @@ export default function MarketScreen({ navigation }) {
           {/* Call Searchbar component*/}
           <Searchbar value={value} updateSearch={updateSearch} />
         </View>
+=======
+        <Header headerText="Marketplace" />
+>>>>>>> 99ade3d (market)
 
-        <StatusBar backgroundColor={COLOURS.white} barStyle="dark-content" />
         <ScrollView showsVerticalScrollIndicator={false}>
           {/*Button Container*/}
           <View style={styles.buttonContainer1}>
@@ -426,9 +456,17 @@ export default function MarketScreen({ navigation }) {
                 justifyContent: "space-around",
               }}
             >
-              {products.map((data) => {
-                return <ProductCard data={data} key={data.id} />;
-              })}
+              {loading ? (
+                <View style={styles.spinner}>
+                  <ActivityIndicator size="large" color="blue" />
+                </View>
+              ) : (
+                <>
+                  {products.map((data) => {
+                    return <ProductCard data={data} key={data.id} />;
+                  })}
+                </>
+              )}
             </View>
           </View>
         </ScrollView>
@@ -472,6 +510,7 @@ const styles = StyleSheet.create({
     //backgroundColor: COLOURS.backgroundLight,
     //width: 100,
   },
+<<<<<<< HEAD
   /////
   textInput: {
     // backgroundColor: 'green',
@@ -500,5 +539,11 @@ const styles = StyleSheet.create({
     height: 80,
     alignItems: "center",
     // height: '100%', width: '100%'
+=======
+  spinner: {
+    height: height / 2,
+    alignItems: "center",
+    justifyContent: "center",
+>>>>>>> 99ade3d (market)
   },
 });

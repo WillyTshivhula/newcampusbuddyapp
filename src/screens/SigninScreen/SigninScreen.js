@@ -20,11 +20,13 @@ import { updateDoc, doc } from "firebase/firestore";
 import { auth, db } from "../../../firebaseSdk";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { AppContext } from "../service";
 
 export default function SigninScreen({ navigation }) {
-  const [email, setUsername] = useState("lloyd123@mail.com");
+  const [email, setUsername] = useState("Lloyd@mail.com");
   const [password, setPassword] = useState(12345678);
   const [loading, setLoading] = useState(false);
+  const [details, setDetails] = useState();
   function nav(value) {
     navigation.navigate(value);
   }
@@ -51,6 +53,7 @@ export default function SigninScreen({ navigation }) {
       .then((data) => {
         setLoading(false);
         nav("Tabs");
+        setDetails(data.data.body);
         console.log(data.data.body);
       })
       .catch((err) => {
@@ -62,130 +65,131 @@ export default function SigninScreen({ navigation }) {
   return (
     <KeyboardAwareScrollView style={{ flex: 1, backgroundColor: "#ffffff" }}>
       {/*Brand View*/}
-
-      <ImageBackground
-        source={require("../../../assets/images/bg1.jpg")}
-        style={{
-          height: Dimensions.get("window").height / 2.5,
-        }}
-      >
-        <View>
-          <Image
-            style={styles.tinyLogo}
-            source={require("../../../assets/images/bglogin1.png")}
-          />
-        </View>
-      </ImageBackground>
-
-      {/*Bottom View*/}
-      <View style={styles.bottomView}>
-        {/*welcome View*/}
-
-        <View style={{ padding: 40 }}>
-          <Text style={{ color: "#A898CF", fontSize: 34 }}>Welcome</Text>
-
-          <Text>Dont Have an Account ?</Text>
-
-          <TouchableOpacity
-            style={styles.SignBtn}
-            onPress={() => nav("SignUp")}
-          >
-            <Text style={styles.SignText}>Sign up Now</Text>
-          </TouchableOpacity>
-
-          {/*Form*/}
-
-          <View style={styles.formView}>
-            <TextInput
-              style={styles.TextInput}
-              placeholder={"Email Address"}
-              placeholderTextColor={"black"}
-              onChangeText={(username) => setUsername(username)}
+      <AppContext.Provider value={details}>
+        <ImageBackground
+          source={require("../../../assets/images/bg1.jpg")}
+          style={{
+            height: Dimensions.get("window").height / 2.5,
+          }}
+        >
+          <View>
+            <Image
+              style={styles.tinyLogo}
+              source={require("../../../assets/images/bglogin1.png")}
             />
-            <TextInput
-              style={styles.TextInput}
-              placeholder={"*********"}
-              placeholderTextColor={"black"}
-              secureTextEntry={true}
-              onChangeText={(password) => setPassword(password)}
-            />
+          </View>
+        </ImageBackground>
+
+        {/*Bottom View*/}
+        <View style={styles.bottomView}>
+          {/*welcome View*/}
+
+          <View style={{ padding: 40 }}>
+            <Text style={{ color: "#A898CF", fontSize: 34 }}>Welcome</Text>
+
+            <Text>Dont Have an Account ?</Text>
 
             <TouchableOpacity
-              style={styles.forgot}
-              onPress={() => nav("Forgot")}
+              style={styles.SignBtn}
+              onPress={() => nav("SignUp")}
             >
-              <Text style={styles.SignText}>Forgot Password?</Text>
+              <Text style={styles.SignText}>Sign up Now</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={signIn}
-              style={{
-                width: "90%",
-                justifyContent: "center",
-                alignItems: "center",
-                marginHorizontal: 50,
-                marginVertical: 18,
-                height: 45,
-                borderWidth: 3,
-                borderRadius: 50,
-                borderColor: "black",
-              }}
-            >
-              {loading ? (
-                <Text
-                  style={{
-                    textTransform: "uppercase",
-                    color: "black",
-                    fontSize: 16,
-                    fontWeight: "bold",
-                  }}
-                >
-                  loading...
-                </Text>
-              ) : (
-                <Text
-                  style={{
-                    textTransform: "uppercase",
-                    color: "black",
-                    fontSize: 16,
-                    fontWeight: "bold",
-                  }}
-                >
-                  SIGN IN
-                </Text>
-              )}
-            </TouchableOpacity>
+            {/*Form*/}
 
-            <Text style={styles.text}>
-              By Login in to Campus Buddy App, you confirm that you accept our
-              <Text
-                style={styles.link}
-                onPress={async () => {
-                  await WebBrowser.openAuthSessionAsync(
-                    "https://www.example.com",
-                    "https://www.google.com"
-                  );
+            <View style={styles.formView}>
+              <TextInput
+                style={styles.TextInput}
+                placeholder={"Email Address"}
+                placeholderTextColor={"black"}
+                onChangeText={(username) => setUsername(username)}
+              />
+              <TextInput
+                style={styles.TextInput}
+                placeholder={"*********"}
+                placeholderTextColor={"black"}
+                secureTextEntry={true}
+                onChangeText={(password) => setPassword(password)}
+              />
+
+              <TouchableOpacity
+                style={styles.forgot}
+                onPress={() => nav("Forgot")}
+              >
+                <Text style={styles.SignText}>Forgot Password?</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={signIn}
+                style={{
+                  width: "90%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginHorizontal: 50,
+                  marginVertical: 18,
+                  height: 45,
+                  borderWidth: 3,
+                  borderRadius: 50,
+                  borderColor: "black",
                 }}
               >
-                Terms of Use
-              </Text>{" "}
-              and
-              <Text
-                style={styles.link}
-                onPress={async () => {
-                  await WebBrowser.openAuthSessionAsync(
-                    "https://www.example.com",
-                    "https://www.google.com"
-                  );
-                }}
-              >
-                {" "}
-                Privacy Policy{" "}
-              </Text>{" "}
-            </Text>
+                {loading ? (
+                  <Text
+                    style={{
+                      textTransform: "uppercase",
+                      color: "black",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    loading...
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      textTransform: "uppercase",
+                      color: "black",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    SIGN IN
+                  </Text>
+                )}
+              </TouchableOpacity>
+
+              <Text style={styles.text}>
+                By Login in to Campus Buddy App, you confirm that you accept our
+                <Text
+                  style={styles.link}
+                  onPress={async () => {
+                    await WebBrowser.openAuthSessionAsync(
+                      "https://www.example.com",
+                      "https://www.google.com"
+                    );
+                  }}
+                >
+                  Terms of Use
+                </Text>{" "}
+                and
+                <Text
+                  style={styles.link}
+                  onPress={async () => {
+                    await WebBrowser.openAuthSessionAsync(
+                      "https://www.example.com",
+                      "https://www.google.com"
+                    );
+                  }}
+                >
+                  {" "}
+                  Privacy Policy{" "}
+                </Text>{" "}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
+      </AppContext.Provider>
     </KeyboardAwareScrollView>
   );
 }

@@ -18,9 +18,9 @@ export default function Users({ user1, user, selectUser, chat }) {
   return (
     <View>
       <List.Item
-       onPress={() => selectUser(user)}
+        onPress={() => selectUser(user)}
         title={user.name}
-        description={data?.text || 'tap to chat'}
+        description={data?.text || "tap to chat"}
         left={(props) => <List.Icon {...props} icon="account-circle" />}
       />
     </View>
