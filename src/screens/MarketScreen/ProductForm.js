@@ -26,14 +26,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context"; //
 import { db, auth, storage } from "../../../firebaseSdk";
 import * as ImagePicker from "expo-image-picker";
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { firebase } from "../../../config2";
-import mime from "mime";
-=======
-
->>>>>>> 977f87f (market)
-=======
 import mime from "mime";
 import { Paragraph, Dialog, Portal, Appbar } from "react-native-paper";
 import {
@@ -43,14 +35,12 @@ import {
   getDownloadURL,
   uploadBytes,
 } from "firebase/storage";
->>>>>>> 99ade3d (market)
 
 import baseURL from "../../../assets/common/baseUrl";
 import axios from "axios";
 
 var { height, width } = Dimensions.get("window");
 const ProductForm = (props) => {
-  const todoRef = firebase.firestore().collection("newData");
   const insets = useSafeAreaInsets();
 
   const [title, setTitle] = useState("");
@@ -106,15 +96,6 @@ const ProductForm = (props) => {
       setImage(result.uri);
     }
   };
-<<<<<<< HEAD
-  if (hasGalleryPermission === false) {
-    return <Text>No access to Internal Storage</Text>;
-  }
-  //image picker ends
-
-  
-
-=======
   const testUp = async () => {
     if (item !== null) {
       setLoading(true);
@@ -142,7 +123,6 @@ const ProductForm = (props) => {
       });
     }
   };
->>>>>>> 99ade3d (market)
   //upload new listing data to the database
   const addProduct = (imageLink) => {
     if (title == "" || price == "" || condition == "" || description == "") {
@@ -151,14 +131,10 @@ const ProductForm = (props) => {
       ]);
       setLoading(false);
     } else {
-      const datas = {
+      const data = {
         title: title,
         price: price,
-<<<<<<< HEAD
-        //image: image,
-=======
         email: auth.currentUser.email,
->>>>>>> 977f87f (market)
         condition: condition,
         description: description,
         itemUrl: imageLink,
@@ -166,7 +142,7 @@ const ProductForm = (props) => {
 
       if (item !== null) {
         axios
-          .put(`${baseURL}/market/update/${item.id}`, datas)
+          .put(`${baseURL}/market/update/${item.id}`, data)
           .then((res) => {
             setLoading(false);
             if (res.status == 200 || res.status == 201) {
@@ -185,39 +161,10 @@ const ProductForm = (props) => {
             ]);
           });
       } else {
-<<<<<<< HEAD
-
-        //add to firebase
-        //get the timestamp
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-        const data = {
-          image: image,
-          createdAt: timestamp,
-          
-        };
-        todoRef
-          .add(data)
-          .then(() => {
-            // release the new field state
-            setImage("");
-            // release keyboard
-            Keyboard.dismiss();
-          })
-          .catch((error) => {
-            // show an alert in case of error
-            alert(error);
-          });
-        //
-        //add to MySQL
-=======
         console.log(data);
-<<<<<<< HEAD
->>>>>>> 977f87f (market)
-=======
         // setLoading(true);
->>>>>>> 99ade3d (market)
         axios
-          .post(`${baseURL}/market/addNew`, datas)
+          .post(`${baseURL}/market/addNew`, data)
           .then((res) => {
             setLoading(false);
             if (res.status == 200 || res.status == 201) {
@@ -230,12 +177,8 @@ const ProductForm = (props) => {
             }
           })
           .catch((error) => {
-<<<<<<< HEAD
-            Alert.alert("Error", "Something went wrong, Please try again", [
-=======
             setLoading(false);
             Alert.alert("Success", "Something went wrong, Please try again", [
->>>>>>> 99ade3d (market)
               { text: "Ok" },
             ]);
           });

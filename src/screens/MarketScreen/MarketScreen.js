@@ -4,7 +4,6 @@ import {
   SafeAreaView,
   View,
   Text,
-  TextInput,
   StatusBar,
   ScrollView,
   TouchableOpacity,
@@ -24,34 +23,16 @@ import baseURL from "../../../assets/common/baseUrl";
 import axios from "axios";
 
 import Searchbar from "../../../components/SearchBar";
-<<<<<<< HEAD
-import SearchedProducts from "./SearchedProducts";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { firebase } from "../../../config2";
-
-const Home = ({ navigation }, props) => {
-   const insets = useSafeAreaInsets();
-=======
 import Header from "../Component/Header";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 var { height, width } = Dimensions.get("window");
 
 export default function MarketScreen({ navigation }) {
   const insets = useSafeAreaInsets();
->>>>>>> 977f87f (market)
   const [products, setProducts] = useState([]);
-<<<<<<< HEAD
-  
-  const [productsFiltered, setProductsFiltered] = useState([]);
-  const [focus, setFocus] = useState();
-  const todoRef = firebase.firestore().collection("newData");
-
-=======
   const [accessory, setAccessory] = useState([]);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
->>>>>>> 99ade3d (market)
   //SearchBar function
   const [value, setValue] = useState();
   function updateSearch(value) {
@@ -61,49 +42,6 @@ export default function MarketScreen({ navigation }) {
 
   //Async Storage starts
   //get called on scren loads
-<<<<<<< HEAD
-  useEffect(() => {
-    //setProducts(data);
-    //setProductsFiltered(data);
-    //setFocus(false);
-
-    //get data from firebase
-    todoRef.onSnapshot((querySnapshot) => {
-      const users = [];
-      querySnapshot.forEach((doc) => {
-        const { image /*text*/ } = doc.data();
-        users.push({
-          id: doc.id,
-          //heading,
-          image,
-          //text,
-        });
-      });
-      //setUsers(users);
-      setProducts(users);
-      setProductsFiltered(users);
-      setFocus(false);
-    });
-
-    axios
-      .get(`${baseURL}/market/all`)
-      .then((res) => {
-        setProducts(res.data);
-        setProductsFiltered(res.data);
-        setFocus(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    return () => {
-      setProducts([]);
-      setProductsFiltered([]);
-      setFocus();
-      setAccessory([]);
-    };
-  }, []);
-=======
   useFocusEffect(
     useCallback(() => {
       axios
@@ -117,24 +55,6 @@ export default function MarketScreen({ navigation }) {
         });
     }, [])
   );
->>>>>>> 99ade3d (market)
-
-  //Search gunction
-  const searchProduct = (text) => {
-    setProductsFiltered(
-      products.filter((i) => 
-        i.name.toLowerCase().includes(text.toLowerCase())
-        )
-    )
-  }
-
-  const openList = () => {
-    setFocus(true);
-  }
-
-  const onBlur = () => {
-    setFocus(false);
-  }
 
   const ProductCard = ({ data }) => {
     return (
@@ -194,165 +114,7 @@ export default function MarketScreen({ navigation }) {
       {/* <Header headerText="Market" /> */}
       <View style={styles.container}>
         {/*Header (Campus Market title)*/}
-<<<<<<< HEAD
-        <View
-          style={{
-<<<<<<< HEAD
-            marginBottom: 10,
-            padding: 16,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 24,
-              color: COLOURS.white,
-              fontWeight: "500",
-            }}
-          >
-            Marketplace
-          </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("ProductForm")}>
-            {/*Entypo generates the market icon (in the below codes)*/}
-            <Entypo
-              name="shopping-bag"
-              style={{
-                fontSize: 18,
-                color: "white",
-                padding: 12,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: COLOURS.backgroundLight,
-                backgroundColor: COLOURS.backgroundDark.Light,
-              }}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* Call Searchbar component*/}
-        <View style={[styles.container1]}>
-          <View style={styles.searchContainer}>
-            <View style={styles.vwSearch}>
-              <Image
-                style={styles.icSearch}
-                source={require("../../../assets/images/ic_search.png")}
-              />
-            </View>
-            <TextInput
-              placeholder="Search"
-              style={styles.textInput}
-              onFocus={openList}
-              onChangeText={(text) => searchProduct(text)}
-            />
-          </View>
-        </View>
-        {/*<Searchbar value={value} updateSearch={updateSearch} />*/}
-      </View>
-
-      <StatusBar backgroundColor={COLOURS.white} barStyle="dark-content" />
-
-      {focus == true ? (
-        <SearchedProducts productsFiltered={productsFiltered} />
-      ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {/*Button Container*/}
-          <View style={styles.buttonContainer1}>
-            <TouchableOpacity
-              style={styles.btnAddProduct}
-              onPress={() => navigation.navigate("ProductForm")}
-            >
-              {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
-              <Entypo
-                name="shopping-bag"
-                style={{
-                  fontSize: 18,
-                  color: COLOURS.backgroundMedium,
-                  padding: 12,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: COLOURS.backgroundLight,
-                }}
-              >
-                <Text>Sell</Text>
-              </Entypo>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btnAddProduct}
-              onPress={() => navigation.navigate("MyListings")}
-            >
-              {/*MaterialCommunity generates the Cart icon at the right corner (in the below codes)*/}
-              <MaterialCommunityIcons
-                //name="cart"
-                style={{
-                  fontSize: 18,
-                  color: COLOURS.backgroundMedium,
-                  padding: 12,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: COLOURS.backgroundLight,
-                }}
-              >
-                <Text>Products</Text>
-              </MaterialCommunityIcons>
-            </TouchableOpacity>
-          </View>
-
-          {/*Button Container ends here*/}
-
-          {/*products card starts here*/}
-          <View
-            style={{
-              padding: 16,
-=======
-            height: 160,
-            position: "static",
-            backgroundColor: "#3F569C",
-            borderBottomRadius: 10,
-            marginTop: insets.top,
-          }}
-        >
-          <View
-            style={{
-              marginBottom: 10,
-              padding: 16,
-              flexDirection: "row",
-              justifyContent: "space-between",
->>>>>>> 977f87f (market)
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 24,
-                color: COLOURS.white,
-                fontWeight: "500",
-              }}
-            >
-              Marketplace
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("ProductForm")}
-            >
-              {/*Entypo generates the market icon (in the below codes)*/}
-              <Entypo
-                name="shopping-bag"
-                style={{
-                  fontSize: 18,
-                  color: "white",
-                  padding: 12,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: COLOURS.backgroundLight,
-                  backgroundColor: COLOURS.backgroundDark.Light,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-          {/* Call Searchbar component*/}
-          <Searchbar value={value} updateSearch={updateSearch} />
-        </View>
-=======
         <Header headerText="Marketplace" />
->>>>>>> 99ade3d (market)
 
         <ScrollView showsVerticalScrollIndicator={false}>
           {/*Button Container*/}
@@ -470,13 +232,8 @@ export default function MarketScreen({ navigation }) {
             </View>
           </View>
         </ScrollView>
-<<<<<<< HEAD
-      )}
-    </SafeAreaView>
-=======
       </View>
     </KeyboardAwareScrollView>
->>>>>>> 977f87f (market)
   );
 }
 
@@ -510,40 +267,9 @@ const styles = StyleSheet.create({
     //backgroundColor: COLOURS.backgroundLight,
     //width: 100,
   },
-<<<<<<< HEAD
-  /////
-  textInput: {
-    // backgroundColor: 'green',
-    flex: 1,
-  },
-
-  vwSearch: {
-    flex: 0.2,
-    justifyContent: "center",
-    alignItems: "center",
-    // width: 40,
-    // backgroundColor: 'red'
-  },
-  icSearch: {
-    height: 18,
-    width: 18,
-  },
-  searchContainer: {
-    backgroundColor: "white",
-    width: "90%",
-    height: 40,
-    flexDirection: "row",
-    borderRadius: 15,
-  },
-  container1: {
-    height: 80,
-    alignItems: "center",
-    // height: '100%', width: '100%'
-=======
   spinner: {
     height: height / 2,
     alignItems: "center",
     justifyContent: "center",
->>>>>>> 99ade3d (market)
   },
 });

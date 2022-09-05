@@ -24,70 +24,20 @@ import { db, auth, storage } from "../../../firebaseSdk";
 import axios from "axios";
 import baseURL from "../../../assets/common/baseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-<<<<<<< HEAD
-import { firebase } from "../../../config2";
-
-var { height, width } = Dimensions.get("window");
-
-const ListHeader = () => {
-  return (
-    <View elevation={1} style={styles.listHeader}>
-      <View style={styles.headerItem}></View>
-      <View style={styles.headerItem}>
-        <Text style={{ fontWeight: "700" }}>Brand</Text>
-      </View>
-      <View style={styles.headerItem}>
-        <Text style={{ fontWeight: "700" }}>Name</Text>
-      </View>
-      <View style={styles.headerItem}>
-        <Text style={{ fontWeight: "700" }}>Price</Text>
-      </View>
-    </View>
-  );
-};
-
-=======
 import { Paragraph, Dialog, Portal, Appbar } from "react-native-paper";
 import { Avatar } from "react-native-paper";
 var { height, width } = Dimensions.get("window");
 import Icon from "react-native-vector-icons/FontAwesome";
->>>>>>> 99ade3d (market)
 const ManageListings = (props) => {
   const insets = useSafeAreaInsets();
   const [productList, setProductList] = useState();
   const [productFilter, setProductFilter] = useState();
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState();
-<<<<<<< HEAD
-
-  const [users, setUsers] = useState([]);
-  const todoRef = firebase.firestore().collection("newData");
-
-=======
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
->>>>>>> 99ade3d (market)
   useFocusEffect(
     useCallback(() => {
-      //get data from firebase
-      todoRef.onSnapshot((querySnapshot) => {
-        const users = [];
-        querySnapshot.forEach((doc) => {
-          const { image /*text*/ } = doc.data();
-          users.push({
-            id: doc.id,
-            //heading,
-            image,
-            //text,
-          });
-        });
-        //setUsers(users);
-        setProductList(users);
-        setProductFilter(users);
-        setLoading(false);
-      });
-
-      /////
       // Get Token
       AsyncStorage.getItem("jwt")
         .then((res) => {
