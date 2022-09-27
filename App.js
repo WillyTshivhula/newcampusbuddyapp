@@ -16,6 +16,9 @@ import MarketScreen from "./src/screens/MarketScreen/MarketScreen";
 import ChatRoom from "./src/screens/ChatRoom/ChatRoom";
 import ProductForm from "./src/screens/MarketScreen/ProductForm";
 
+import BuddyScreen from "./src/screens/BuddyScreen/BuddyScreen";
+import MyBuddies from "./src/screens/BuddyScreen/MyBuddies";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +28,17 @@ export default function App() {
       <Stack.Navigator initialRouteName="onBoardScreen">
         {/* <Stack.Screen name="Chat" component={ChatRoom} options={{headerShown:false}}/> */}
         {/* <Stack.Screen name="Home" component={MarketScreen} options={{headerShown:false}}/> */}
+        <Stack.Screen
+          name="BuddyScreen"
+          component={BuddyScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="MyBuddies"
+          component={MyBuddies}
+          options={{ headerShown: false }}
+        />
+
         <Stack.Screen
           name="ProductForm"
           component={ProductForm}

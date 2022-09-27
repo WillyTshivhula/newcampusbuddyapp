@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Keyboard,
+  Modal,
   Alert,
   ImageBackground,
   Button,
@@ -38,6 +39,7 @@ import {
 
 import baseURL from "../../../assets/common/baseUrl";
 import axios from "axios";
+import { ModalPicker } from "../../../components/ModalPicker";
 
 var { height, width } = Dimensions.get("window");
 const ProductForm = (props) => {
@@ -58,6 +60,17 @@ const ProductForm = (props) => {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [path, setPath] = useState(null);
+  const [campusName, setCampusName] = useState("Campus Name");
+  const [isModalVisible, setisModalVisible] = useState(false);
+  
+  const changeModalVisibility = (bool) => {
+    setisModalVisible(bool)
+  }
+
+  const setData = (option) => {
+    setCampusName(option)
+  }
+
   useEffect(() => {
     //edit or update product
     if (!props.route.params) {
@@ -273,7 +286,7 @@ const ProductForm = (props) => {
                 <TextInput
                   style={styles.TextInput}
                   multiline={true}
-                  numberOfLines={4}
+                  numberOfLines={3}
                   placeholder={"Description"}
                   name="description"
                   id="description"
@@ -281,6 +294,24 @@ const ProductForm = (props) => {
                   placeholderTextColor={"grey"}
                   onChangeText={(description) => setDescription(description)}
                 />
+                
+                <TouchableOpacity 
+                  onPress={() => changeModalVisibility(true)}
+                  style={styles.TextInput}
+                >
+                  <Text style={styles.text}>{campusName}</Text>
+                </TouchableOpacity>
+                <Modal
+                  transparent={true}
+                  animationType="fade"
+                  visible={isModalVisible}
+                  nRequestClose={() => changeModalVisibility(false)}
+                >
+                  <ModalPicker
+                    changeModalVisibility={changeModalVisibility}
+                    setData={setData}
+                  />
+                </Modal>
 
                 <TouchableOpacity
                   style={styles.button}
@@ -350,6 +381,11 @@ const styles = StyleSheet.create({
     color: COLOURS.black,
     backgroundColor: "white",
   },
+  text: {
+    color: COLOURS.black,
+    // marginVertical: 20,
+    // fontSize: 25,
+  },
   button: {
     width: "90%",
     color: "#000",
@@ -379,6 +415,13 @@ const styles = StyleSheet.create({
   textStyle: {
     padding: 10,
     textAlign: "center",
+  },
+
+  touchableOpacity: {
+    backgroundColor: "orange",
+    alignSelf: "stretch",
+    paddingHorizontal: 20,
+    marginHorizontal: 20,
   },
   noImage: {
     backgroundColor: "#E9EDF3",

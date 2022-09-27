@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../HomeScreen/HomeScreen";
 import AlertScreen from "../AlertScreen/AlertScreen";
 import MarketScreen from "../MarketScreen/MarketScreen";
-import NagivateScreen from "../NagivateScreen/NagivateScreen";
+import BuddyScreen from "../BuddyScreen/BuddyScreen";
 import ChatRoom from "../ChatRoom/ChatRoom";
 import { MaterialIcons } from "@expo/vector-icons";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
@@ -34,12 +34,12 @@ export default function Tabs() {
         }}
       />
       <Tab.Screen
-        name="Nagivate"
-        component={NagivateScreen}
+        name="Buddy"
+        component={BuddyScreen}
         options={{
-          tabBarLabel: "Nagivate",
+          tabBarLabel: "Buddy",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="location-pin" color={color} size={26} />
+            <MaterialIcons name="note" color={color} size={26} />
           ),
         }}
       />
