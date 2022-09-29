@@ -24,6 +24,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 export default function HomeScreen() {
   // const { details } = useContext(AppContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibl, setModalVisibl] = useState(false);
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(true);
   const [recipient, setRecipient] = useState("ndivhotshivhula@gmail.com");
@@ -53,7 +54,7 @@ export default function HomeScreen() {
         data
       )
       .then((data) => {
-        setModalVisible(!modalVisible);
+        setModalVisibl(!modalVisibl);
         setLoading(false);
         Alert.alert("Success", "Incident submitted...", [{ text: "Ok" }]);
       })
@@ -63,6 +64,10 @@ export default function HomeScreen() {
         ]);
         setLoading(false);
       });
+  }
+
+  const openModel =()=>{
+    setModalVisibl(true)
   }
   return (
     <KeyboardAwareScrollView>
@@ -101,33 +106,29 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setModalVisible(!modalVisible);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Report Incident!</Text>
-              <TouchableOpacity
-              underlayColor="#E8E8E8"
-              onPress={() => {
-                setModalVisible(false);
-              }}
-              style={{
-                alignSelf: "flex-end",
-                position: "absolute",
-                top: 5,
-                right: 10,
-              }}
-            >
-              <Icon name="close" size={20} />
-            </TouchableOpacity>
+      <View style={styles.repot}>
+      {!modalVisibl && 
+       <TouchableOpacity
+       onPress={openModel}
+       style={{
+         width: "90%",
+         justifyContent: "center",
+         alignItems: "center",
+         marginHorizontal: 20,
+         marginVertical: 80,
+         height: 45,
+         borderWidth: 3,
+         borderRadius: 50,
+         borderColor: "black",
+       }}
+     >
+     <Text>Report Incident!</Text>
+     </TouchableOpacity>
+}     
+          { modalVisibl && 
+            <View  style={styles.bos}>
+              <Text>Report Incident!</Text>
+
               <TextInput
                 style={styles.TextInput}
                 placeholder={"Subject"}
@@ -141,26 +142,31 @@ export default function HomeScreen() {
                 placeholderTextColor={"black"}
                 onChangeText={(msgbody) => setMsgbody(msgbody)}
               />
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
+              <TouchableOpacity
+                    style={{
+                      width: "90%",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      // marginHorizontal: 50,
+                       marginVertical: 18,
+                      height: 45,
+                      borderWidth: 3,
+                      borderRadius: 50,
+                      borderColor: "black",
+                    }}
                 onPress={sendmail}
               >
                 {loading ? (
                   <ActivityIndicator size="large" color="blue" />
                 ) : (
-                  <Text style={styles.textStyle}>Submit </Text>
+                  <Text>Submit </Text>
                 )}
-              </Pressable>
+              </TouchableOpacity>
             </View>
-          </View>
-        </Modal>
-        <Pressable
-          style={[styles.button, styles.buttonOpen]}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={styles.textStyle}>Report Incident</Text>
-        </Pressable>
+          }
+
       </View>
+
     </KeyboardAwareScrollView>
   );
 }
@@ -169,7 +175,7 @@ const styles = StyleSheet.create({
   cardView: {
     width: width - 20,
     height: height / 3,
-    backgroundColor: "grey",
+    backgroundColor: "#000000",
     margin: 10,
     borderRadius: 10,
     shadowColor: "#000",
@@ -178,13 +184,34 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 5,
   },
-
+  repot: {
+    width: width - 20,
+    height: height / 2,
+    // backgroundColor: "#000000",
+    margin: 10,
+    borderRadius: 10,
+    shadowColor: "#white",
+    shadowOffset: { width: 0.5, height: 0.5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  bos:{
+    // width: "90%",
+    // borderWidth: 1,
+    // borderColor: "black",
+    height: 52,
+    borderRadius: 10,
+    paddingLeft: 25,
+     marginTop: 25,
+    // color: "black",
+  },
   textView: {
     position: "absolute",
     bottom: 10,
     margin: 10,
     left: 5,
-    top: 5,
+    top: 50,
   },
   image: {
     width: 100,
@@ -243,7 +270,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    marginTop: 310,
   },
   modalView: {
     width: "95%",
@@ -273,7 +300,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonOpen: {
-    backgroundColor: "#9075E3",
+    backgroundColor: "#000",
   },
   buttonClose: {
     backgroundColor: "#2196F3",
@@ -293,7 +320,7 @@ const styles = StyleSheet.create({
     borderColor: "black",
     height: 52,
     borderRadius: 10,
-    paddingLeft: 5,
+    paddingLeft: 10,
     marginTop: 20,
     color: "black",
     // textAlign : "center",
@@ -302,4 +329,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
   },
+  
 });

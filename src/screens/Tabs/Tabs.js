@@ -37,7 +37,7 @@ export default function Tabs() {
         name="Nagivate"
         component={NagivateScreen}
         options={{
-          tabBarLabel: "Nagivate",
+          tabBarLabel: "Orientation",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="location-pin" color={color} size={26} />
           ),

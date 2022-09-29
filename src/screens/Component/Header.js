@@ -15,9 +15,9 @@ export default function Header({headerText}) {
         hidden={true} />
       <View>
         <Text style={styles.textH}> 
-        <Icon name="sign-out" size={40} />
+        <Icon name="sign-out" size={30} />
         </Text>
-        <Text>Logout</Text>
+        {/* <Text>Logout</Text> */}
     </View>
     </View>
   )
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     Header: {
       width: '100%',
       backgroundColor: "#E2E2E2",
-      height:100,
+      height:50,
       flexDirection:'row',
       alignItems:'flex-end',
         justifyContent:"flex-end",
