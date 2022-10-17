@@ -15,7 +15,7 @@ export default function Header({headerText}) {
         hidden={true} />
       <View>
         <Text style={styles.textH}> 
-        <Icon name="sign-out" size={30} />
+        <Icon name="sign-out" size={20} />
         </Text>
         {/* <Text>Logout</Text> */}
     </View>

@@ -25,6 +25,7 @@ import { AppContext } from "../service";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
+import { Divider } from 'react-native-paper';
 
 export default function HomeScreen(props) {
   // const { details } = useContext(AppContext);
@@ -155,7 +156,7 @@ export default function HomeScreen(props) {
           <View style={styles.statsContainer}>
             <View style={styles.statsBox}>
               <Text style={[styles.text, { fontSize: 15 }]}>
-                {profile[0]?.email}
+                {profile[0]?.email} 
               </Text>
               <Text style={[styles.text, styles.subText]}>Email</Text>
             </View>
@@ -193,11 +194,13 @@ export default function HomeScreen(props) {
                 
               </View>
             </ScrollView>
+            <Divider />
+
             <TouchableOpacity style={styles.mediaCount} onPress={openQR}>
               <Text
                 style={[
                   styles.text,
-                  { fontSize: 24, color: "#DFD8C8", fontWeight: "300" },
+                  { fontSize: 18, color: "#DFD8C8", fontWeight: "300" },
                 ]}
               >
                 QR{" "}
@@ -219,10 +222,10 @@ export default function HomeScreen(props) {
               <Text
                 style={[
                   styles.text,
-                  { fontSize: 24, color: "#DFD8C8", fontWeight: "300" },
+                  { fontSize: 18, color: "#DFD8C8", fontWeight: "300" },
                 ]}
               >
-                Report
+                RPT
               </Text>
               <Text
                 style={[
@@ -254,9 +257,6 @@ export default function HomeScreen(props) {
         
             {modalVisibl && (
               <View style={{marginLeft:30}}>
-                <Text style={[styles.subText, styles.recent]}>
-                  Report Incident!
-                </Text>
                 <TextInput
                   style={styles.TextInput}
                   placeholder={"Subject"}
@@ -293,7 +293,25 @@ export default function HomeScreen(props) {
               </View>
             )}
           </View>
+         
         </ScrollView>
+        <Divider />
+        <TouchableOpacity style={styles.mediaCount2}
+        onPress={() => props.navigation.navigate("NavMapsScreen")}
+        >
+              <Text
+                style={[
+                  styles.text,
+                  {
+                    fontSize: 12,
+                    color: "#DFD8C8",
+                    textTransform: "uppercase",
+                  },
+                ]}
+              >
+               Take a campus tour
+              </Text>
+            </TouchableOpacity>
       </SafeAreaView>
     </KeyboardAwareScrollView>
   );
@@ -325,9 +343,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   bos: {
-    // width: "90%",
-    // borderWidth: 1,
-    // borderColor: "black",
     height: 52,
     borderRadius: 10,
     paddingLeft: 25,
@@ -341,20 +356,6 @@ const styles = StyleSheet.create({
     left: 5,
     top: 50,
   },
-  // image: {
-  //   width: 100,
-  //   height: 115,
-  //   borderRadius: 10,
-  //   marginLeft: 250,
-  //   marginTop: 35,
-  // },
-  // image2: {
-  //   width: 100,
-  //   height: 115,
-  //   borderRadius: 10,
-  //   marginLeft: 150,
-  //   marginTop: -150,
-  // },
   itemTitle: {
     color: "white",
     fontSize: 22,
@@ -575,6 +576,22 @@ const styles = StyleSheet.create({
     shadowColor: "rgba(0, 0, 0, 0.38)",
     shadowOffset: { width: 0, height: 10 },
     shadowRadius: 20,
+    shadowOpacity: 1,
+  },
+  mediaCount2: {
+    backgroundColor: "#41444B",
+    position: 'relative',
+    // top: "50%",
+    marginTop: 15,
+    marginLeft: 30,
+    width: 300,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+    shadowColor: "rgba(0, 0, 0, 0.38)",
+    shadowOffset: { width: 0, height: 10 },
+    shadowRadius: 100,
     shadowOpacity: 1,
   },
   recent: {

@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import 'react-native-gesture-handler'
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -16,7 +15,7 @@ import MarketScreen from './src/screens/MarketScreen/MarketScreen';
 import  ChatRoom from './src/screens/ChatRoom/ChatRoom'
 import ProductForm from './src/screens/MarketScreen/ProductForm';
 import UploadProfile from './src/screens/HomeScreen/UploadProfile'
-
+import NavMapsScreen from './src/screens/NavScreen/NavMapsScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +24,7 @@ export default function App() {
     <NavigationContainer>
     <Stack.Navigator initialRouteName="onBoardScreen">
     {/* <Stack.Screen name="Chat" component={ChatRoom} options={{headerShown:false}}/> */}
-    {/* <Stack.Screen name="Home" component={MarketScreen} options={{headerShown:false}}/> */}
+    <Stack.Screen name="NavMapsScreen" component={NavMapsScreen} options={{headerShown:false}}/>
     <Stack.Screen name="ProductForm" component={ProductForm} options={{headerShown:false}}/>
     <Stack.Screen name="ListItem" component={ListItem} options={{headerShown:false}}/>
     <Stack.Screen name="UploadProfile" component={UploadProfile} options={{headerShown:false}}/>
