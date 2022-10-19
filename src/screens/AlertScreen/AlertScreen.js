@@ -42,9 +42,10 @@ export default function AlertScreen() {
   }
 
   function sendmail() {
+    const locationLInk = `https://www.google.com/maps/dir/?api=1&destination=${location},${location2}&dir_action=navigate&travelmode=walking`
     const data = {
       recipient: recipient,
-      msgBody: `A Student at the current location ${location}, ${location2} needs security assistance.`,
+      msgBody: `A Student at the current location ${locationLInk} needs security assistance.`,
       subject: "Urgent Assistance needed !",
     };
     // setLoading(true);
