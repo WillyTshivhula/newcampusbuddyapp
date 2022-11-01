@@ -105,7 +105,7 @@ const UploadProfile = (props) => {
       }
       console.log(data)
     axios
-    .post(`http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/upload/new`, data)
+    .post(`http://192.168.0.157:8080/api/upload/new`, data)
     .then((res) => {
       setLoading(false);
       if (res.status == 200 || res.status == 201) {

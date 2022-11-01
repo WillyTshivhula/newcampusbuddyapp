@@ -26,7 +26,7 @@ export default function ForgotPassWordScreen({ navigation }) {
     };
   
   axios
-  .put("http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/auth/reset", data)
+  .put("http://192.168.0.157:8080/api/auth/reset", data)
   
   .then((data) => {
     nav('Tabs')

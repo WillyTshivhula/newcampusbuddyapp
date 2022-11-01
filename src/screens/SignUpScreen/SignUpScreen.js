@@ -52,7 +52,7 @@ export default function SignUpScreen({ navigation }) {
     }
     axios
       .post(
-        "http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/auth/signup",
+        "http://192.168.0.157:8080/api/auth/signup/",
         data
       )
       .then((data) => {

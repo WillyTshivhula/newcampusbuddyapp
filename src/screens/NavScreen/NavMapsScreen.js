@@ -51,6 +51,11 @@ export default function NavMapsScreen(props) {
             title="UJ APB Student Center"
             left={() => <List.Icon icon="crosshairs" />}
           />
+            <List.Item
+            onPress={() => openMaps("-26.18022972764837", "28.016133653898965")}
+            title="UJ APB Student Center"
+            left={() => <List.Icon icon="crosshairs" />}
+          />
         </List.Section>
       </View>
     </View>

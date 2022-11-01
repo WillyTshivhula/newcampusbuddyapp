@@ -168,7 +168,7 @@ const ProductInfo = ({ route, navigation }) => {
                   }}
                 />
               </View>
-              <Text> Rustaveli Ave 57,{"\n"}17-001, Batume</Text>
+              <Text> UJ APB Canpus</Text>
             </View>
           </View>
           <View
