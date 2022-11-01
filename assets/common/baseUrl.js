@@ -5,9 +5,9 @@ let baseURL = "";
 {
   Platform.OS == ""
     ? (baseURL =
-        "http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/")
+        "http://192.168.0.157:8080/api/")
     : (baseURL =
-        "http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api");
+        "http://192.168.0.157:8080/api");
 }
 
 export default baseURL;

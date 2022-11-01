@@ -43,7 +43,7 @@ export default function HomeScreen(props) {
   // useEffect(() => {
   //   axios
   //     .get(
-  //       `http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/profile/details/${auth.currentUser.email}`
+  //       `http://192.168.0.157:8080/api/profile/details/${auth.currentUser.email}`
   //     )
   //     .then((res) => {
   //       setProfile(res.data);
@@ -56,7 +56,7 @@ export default function HomeScreen(props) {
     useCallback(() => {
       axios
       .get(
-        `http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/profile/details/${auth.currentUser.email}`
+        `http://192.168.0.157:8080/api/profile/details/${auth.currentUser.email}`
       )
       .then((res) => {
         setProfile(res.data);
@@ -65,7 +65,7 @@ export default function HomeScreen(props) {
       .catch((err) => console.log(err));
 
       axios
-        .get(`http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/upload/profile/${auth.currentUser.email}`)
+        .get(`http://192.168.0.157:8080/api/upload/profile/${auth.currentUser.email}`)
         .then((res) => {
           setStdPicture(res.data);
           console.log(res.data);
@@ -85,7 +85,7 @@ export default function HomeScreen(props) {
     setLoading(true);
     axios
       .post(
-        "http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/email/sendMail",
+        "http://192.168.0.157:8080/api/email/sendMail",
         data
       )
       .then((data) => {

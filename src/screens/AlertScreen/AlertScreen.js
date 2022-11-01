@@ -51,7 +51,7 @@ export default function AlertScreen() {
     // setLoading(true);
     axios
       .post(
-        "http://campusapi-env.eba-pdyrxrjw.us-east-1.elasticbeanstalk.com/api/email/sendMail",
+        "http://192.168.0.157:8080/api/email/sendMail",
         data
       )
       .then((data) => {
